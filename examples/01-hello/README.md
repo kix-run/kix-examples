@@ -52,5 +52,5 @@ curl http://localhost:8080/
 
 ## Next
 
-Once this works, move on to [`02-secret-dep`](../02-secret-dep/) which
-adds a real inter-service dependency.
+Once this works, move on to [`02-service-dep`](../02-service-dep/) which
+adds a second service and shows how Kix wires one to another's URL.

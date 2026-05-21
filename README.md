@@ -1,4 +1,4 @@
-# kix-example
+# kix-examples
 
 A tour of [Kix](https://kixops.dev) patterns, presented as a series of
 small clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
@@ -49,23 +49,23 @@ curl http://localhost:8080/
 
 ## Switching examples
 
-Each example deploys to its own `example-NN` namespace, so they coexist
-on the same kind cluster:
+Each example uses its own namespace(s) so they coexist on the same
+kind cluster:
 
 ```sh
-kix deploy 02-secret-dep -y
-kix pf 02-secret-dep web 8080:80
+kix deploy 02-service-dep -y
+kix pf 02-service-dep gateway 8080:80
 ```
 
 ## Other useful kix commands
 
 ```sh
-kix list clusters                  # what's defined in flake.nix
-kix list packages --cluster 02-secret-dep
-kix status 02-secret-dep           # resource health table
-kix diff 02-secret-dep             # what would change
-kix inspect 02-secret-dep          # DI deps, parts, out
-kix rollback 02-secret-dep         # roll back to previous activation
+kix list clusters                       # what's defined in flake.nix
+kix list packages --cluster 02-service-dep
+kix status 02-service-dep               # resource health table
+kix diff 02-service-dep                 # what would change
+kix inspect 02-service-dep              # DI deps, parts, out
+kix rollback 02-service-dep             # roll back to previous activation
 ```
 
 ## Cleanup
@@ -81,5 +81,6 @@ flake.nix                   # mkFlake exposing every example as cluster-<name>
 kind-config.yaml            # kind cluster config (single control-plane node)
 examples/
   01-hello/                 # README + cluster.nix
-  02-secret-dep/            # README + cluster.nix
+  02-service-dep/           # README + cluster.nix + reverse-proxy-package.nix
+  03-cross-namespace/       # README + cluster.nix + reverse-proxy-package.nix
 ```

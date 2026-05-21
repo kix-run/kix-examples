@@ -19,7 +19,8 @@
       inherit inputs;
       clusters = {
         "01-hello" = ./examples/01-hello/cluster.nix;
-        "02-secret-dep" = ./examples/02-secret-dep/cluster.nix;
+        "02-service-dep" = ./examples/02-service-dep/cluster.nix;
+        "03-cross-namespace" = ./examples/03-cross-namespace/cluster.nix;
       };
     };
 }
