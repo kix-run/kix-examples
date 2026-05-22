@@ -33,38 +33,15 @@ reverse-proxy-package.nix  # proxy package, plus a capability marker for rules
 ```
 
 The scorecard lives in its own file because it is the focus of this
-example. `cluster.nix` declares the cluster, then imports the rules:
-
-```nix
-# In cluster.nix:
-# `lib` is in scope because the surrounding module pulls it from
-# the NixOS module-system args.
-scorecard = import ./scorecard.nix { inherit lib kix; };
-```
+example. Open `cluster.nix` and look for the `scorecard` attribute:
+the cluster imports `./scorecard.nix` and passes in `lib` and `kix`.
 
 ## The scorecard
 
-```nix
-# In scorecard.nix:
-{
-  enable = true;
-
-  # Per-rule severity override. Key is `<category>.<rule>`.
-  # Raises a built-in from "warning" to "error" so the build fails
-  # if a probe is missing.
-  ruleOverrides.byRule."reliability.hasProbes".severity = "error";
-
-  rules = {
-    # Whole built-in category. Most production hardening is one line.
-    reliability = kix.rules.reliability;
-
-    # Custom rules go under a category name of your choice
-    # (we picked `custom`).
-    custom.proxyMaxBodySizeMustBeExplicit = { ... };
-    custom.noProxyPathCollision = { ... };
-  };
-}
-```
+Open `scorecard.nix`. The top-level shape is small: `enable = true`,
+one `ruleOverrides` entry, and a `rules` attrset. The `rules` attrset
+turns on the built-in `reliability` category and adds two custom rules
+under `custom`.
 
 ### Rule 1 — Built-in `reliability` + severity override
 
@@ -76,27 +53,14 @@ built-in category.
 
 ### Rule 2 — `proxyMaxBodySizeMustBeExplicit` (package-level)
 
-```nix
-custom.proxyMaxBodySizeMustBeExplicit = {
-  level = "package";                # sees one instance's config + resources
-  severity = "error";
+In `scorecard.nix`, look at
+`custom.proxyMaxBodySizeMustBeExplicit`. It is a package-level rule, so
+it runs once per instance and can inspect that instance's resolved
+`config`.
 
-  # Scope the rule: only run on reverse-proxy instances. Matches on
-  # `meta.provides`, which the package declares (see
-  # ./reverse-proxy-package.nix). This is the canonical way Kix
-  # packages advertise capabilities — kixpkgs uses the same pattern
-  # for `"sql-database"`, `"reflection"`, etc.
-  appliesTo = { meta, ... }:
-    builtins.elem "reverse-proxy" (meta.provides or [ ]);
-
-  # Fire if the instance still uses the default body size.
-  check = { config, instanceName, ... }:
-    if (config.maxBodySize or "") == "1m" then
-      [ { message = "instance '${instanceName}' uses the unsafe default ..."; } ]
-    else
-      [ ];
-};
-```
+The `appliesTo` function scopes the rule to packages whose
+`meta.provides` includes `"reverse-proxy"`. That marker is declared in
+`reverse-proxy-package.nix`, in the package's `meta` attrset.
 
 Nginx rejects request bodies larger than its default 1 MB. Encoding
 that as a rule forces every reverse-proxy instance to set a value
@@ -104,36 +68,13 @@ explicitly, instead of leaving the limit implicit.
 
 ### Rule 3 — `noProxyPathCollision` (cluster-level)
 
-```nix
-custom.noProxyPathCollision = {
-  level = "cluster";                # sees `allInstances` across every namespace
-  severity = "error";
+In `scorecard.nix`, look at `custom.noProxyPathCollision`. It is a
+cluster-level rule, so its `check` function receives `allInstances`
+across every namespace.
 
-  check = { allInstances, ... }:
-    let
-      # Flatten { ns = { name = inst; }; } → list of { ns, name, inst }.
-      flat = lib.concatLists (
-        map (ns: map (name: { inherit ns name; inst = allInstances.${ns}.${name}; })
-              (builtins.attrNames allInstances.${ns}))
-            (builtins.attrNames allInstances));
-
-      # Keep only reverse-proxy instances.
-      proxies = builtins.filter (e: isProxy e.inst) flat;
-
-      # Group by proxyPath → { "/v1/" = [...]; "/v2/" = [...]; }.
-      byPath = builtins.foldl' (acc: e:
-        let p = e.inst._meta.config.proxyPath or "?";
-        in acc // { ${p} = (acc.${p} or []) ++ [ e ]; }
-      ) {} proxies;
-
-      # Any path with more than one owner is a collision.
-      collisions = lib.filterAttrs (_: members:
-        builtins.length members > 1
-      ) byPath;
-    in
-    map (path: { message = "${...}"; }) (builtins.attrNames collisions);
-};
-```
+The rule flattens that namespace map, keeps only reverse-proxy
+instances with the `isProxy` helper, groups them by `proxyPath`, and
+reports any path with more than one owner.
 
 Only a cluster-level rule can catch this. A manifest-level rule sees
 one resource at a time; a package-level rule sees one instance. Checks

@@ -31,21 +31,14 @@ isolation.
 
 ## How the wiring works
 
-```nix
-# Same package signature as 02 — the proxy declares a `backend` dep.
-build = { self, scope, kix, backend, ... }: { ... };
-```
+The reverse-proxy package is the same shape as in `02-service-dep`: its
+`build` function declares a `backend` dep.
 
-```nix
-# The gateway lives in `app`, but `backend` lives in `platform`.
-# Name-matching only looks within the same namespace, so we wire it
-# out explicitly. `ref.<ns>.<inst>` reaches into another namespace
-# and resolves to that instance.
-gateway = {
-  package = reverseProxyPackage;
-  deps.backend = ref.platform.backend;
-};
-```
+The difference is in `cluster.nix`. Look at `instances.app.gateway`:
+the gateway lives in `app`, while the backend lives in `platform`, so
+the gateway writes the dependency explicitly with `ref.platform.backend`.
+That `ref.<ns>.<inst>` form reaches into another namespace and resolves
+to that exact instance.
 
 ### Wait, doesn't Kix find it automatically?
 

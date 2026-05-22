@@ -21,44 +21,21 @@ reverse-proxy-package.nix  # declares typed `options`
 
 ## The Options
 
-```nix
-# In reverse-proxy-package.nix:
-options = {
-  # `lib.types.strMatching` runs the regex at module-merge time.
-  # `proxyPath = "api"` fails before any K8s manifest is rendered.
-  proxyPath = lib.mkOption {
-    type = lib.types.strMatching "^/.*$";
-    default = "/";
-    description = "URL path this proxy forwards. Must start with `/`.";
-    example = "/api/";
-  };
+Open `reverse-proxy-package.nix` and look at the `options` attrset.
+It declares two knobs:
 
-  # Nginx body-size format: number with optional k/K/m/M/g/G suffix.
-  # `"1mb"` fails (wrong suffix); `"10m"` passes.
-  maxBodySize = lib.mkOption {
-    type = lib.types.strMatching "^[0-9]+[kKmMgG]?$";
-    default = "1m";
-    description = ''
-      Max request body size, in nginx format (e.g. "1m", "100k", "50M").
-    '';
-    example = "10m";
-  };
-};
-```
+- `proxyPath`, whose type requires a leading `/`
+- `maxBodySize`, whose type accepts nginx body-size values such as
+  `"100k"`, `"1m"`, or `"50M"`
+
+Both are built with `lib.mkOption`, so their defaults, descriptions,
+examples, and types become part of the package's config contract.
 
 ## Supplying values from the cluster
 
-```nix
-# In cluster.nix:
-gateway = {
-  package = reverseProxyPackage;
-  config = {
-    proxyPath = "/";       # the type forces a leading "/"
-    maxBodySize = "10m";   # the type forces a valid nginx size suffix
-  };
-  deps.backend = ref.example-04.backend;
-};
-```
+Open `cluster.nix` and look at `instances.example-04.gateway`. Its
+`config` attrset supplies values for those package options, and
+`deps.backend` still points the gateway at the backend instance.
 
 Inside the package's `build` function, those values arrive as
 `config.proxyPath` and `config.maxBodySize`. It is the same `config`

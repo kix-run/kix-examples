@@ -27,16 +27,10 @@ those concepts separate because one package can back many instances;
 naming convention for package files such as `echo-server` and
 `secret-echo`.
 
-For now, local packages are imported by path:
-
-```nix
-# In cluster.nix:
-# `mkFlake` reads its package catalog from `kix/packages/` in kixpkgs.
-# Package files local to this repo sit next to cluster.nix and are
-# imported by hand.
-let reverseProxyPackage = import ./reverse-proxy-package.nix;
-in ...
-```
+For now, local packages are imported by path. In `cluster.nix`, look
+at the `let` block near the top: it imports `./reverse-proxy-package.nix`
+and binds it as `reverseProxyPackage` for the instance definitions
+below.
 
 ## Instances
 
@@ -47,22 +41,14 @@ in ...
 
 ## How the wiring works
 
-```nix
-# The proxy package's build function takes a `backend` arg.
-# Kix resolves that dep by looking for an instance with the same name
-# in the same namespace.
-build = { self, scope, kix, backend, ... }: { ... };
-```
+Open `reverse-proxy-package.nix` and look at the package's `build`
+function. It asks for a `backend` argument. Kix resolves that dep by
+looking for an instance with the same name in the same namespace.
 
-```nix
-# Inside the build, `backend` is the resolved instance's `out` API.
-# `backend.out.fqdn` is the Service DNS name, and `backend.out.port`
-# is the Service port. Using them also gives Kix enough information
-# to apply the backend before the gateway.
-location / {
-    proxy_pass http://${backend.out.fqdn}:${backend.out.port}/;
-}
-```
+In the `configmap` resource, nginx uses `backend.out.fqdn` and
+`backend.out.port` to build the `proxy_pass` target. Those values are
+the backend Service DNS name and port, and using them gives Kix enough
+information to apply the backend before the gateway.
 
 ## Run
 

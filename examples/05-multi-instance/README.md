@@ -26,34 +26,11 @@ reverse-proxy-package.nix  # unchanged from 04
 
 ## Shape
 
-```nix
-# Each namespace carries one backend + one gateway. Both pairs use
-# the same packages — `echo-server` and `reverseProxyPackage` — but
-# get different config and end up as distinct instances.
-instances.app-v1 = {
-  backend = {
-    package = packages.echo-server;
-    config.message = "Response from app-v1";
-  };
-  gateway = {
-    package = reverseProxyPackage;
-    config.proxyPath = "/v1/";
-    ...
-  };
-};
-
-instances.app-v2 = {
-  backend = {
-    package = packages.echo-server;
-    config.message = "Response from app-v2";
-  };
-  gateway = {
-    package = reverseProxyPackage;
-    config.proxyPath = "/v2/";
-    ...
-  };
-};
-```
+Open `cluster.nix` and compare `instances.app-v1` with
+`instances.app-v2`. Each namespace carries one backend and one gateway.
+Both pairs use the same packages, `packages.echo-server` and
+`reverseProxyPackage`, but they supply different messages and
+`proxyPath` values.
 
 Kix renders each instance independently: four Deployments, four
 Services, four ConfigMaps, two namespaces. Each

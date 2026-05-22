@@ -13,23 +13,13 @@ namespace.
 
 ## What's in it
 
-```nix
-# `instances.<namespace>.<name>` is where every workload lives.
-# One instance here: name `hello-world`, in namespace `example-01`.
-instances.example-01 = {
-  hello-world = {
-    # The `echo-server` package ships in kixpkgs and serves a fixed
-    # message over HTTP.
-    package = packages.echo-server;
+Open `cluster.nix` and look at `instances.example-01`. There is one
+instance named `hello-world`, backed by the `packages.echo-server`
+package from kixpkgs.
 
-    # `config` is whatever the package's options accept.
-    # echo-server's `message` becomes the body of every response.
-    config = {
-      message = "Hello from Kix!";
-    };
-  };
-};
-```
+The only config value is `message`, which becomes the HTTP response
+body. That is the smallest useful edit point in this repo: change the
+message, deploy again, and curl the service.
 
 ## Run
 
