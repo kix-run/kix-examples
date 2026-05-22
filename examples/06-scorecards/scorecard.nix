@@ -22,11 +22,13 @@ let
   # used throughout kixpkgs (`[ "sql-database" ]`, `[ "reflection" ]`,
   # `[ "vpn" ]`, etc.). Matching by capability rather than by name or
   # description means the rule keeps working through renames.
+  # region:isProxy
   isProxy =
     inst:
     # Cluster-level rules inspect built instances, so the package
     # metadata is under `inst._meta.packageMeta`.
     builtins.elem "reverse-proxy" (inst._meta.packageMeta.provides or [ ]);
+  # endregion
 in
 {
   enable = true;
