@@ -50,3 +50,34 @@ commit-msg:
           echo "Remove the line and try again."
           exit 1
         fi
+
+post-commit:
+  commands:
+    verify-signature:
+      # Reject unsigned commits right after they're made — easier to
+      # amend than after a push. `%G?` returns G (good), U (untrusted
+      # but signed), or N (no signature).
+      run: |
+        status=$(git log --pretty=format:'%G?' -1 HEAD)
+        if [ "$status" != "G" ] && [ "$status" != "U" ]; then
+          echo "ERROR: Commit is not signed. Please amend with: git commit --amend -S"
+          exit 1
+        fi
+
+pre-push:
+  commands:
+    verify-signatures:
+      # Belt-and-braces: every commit being pushed must be signed.
+      run: |
+        upstream=$(git rev-parse --abbrev-ref '@{upstream}' 2>/dev/null) || exit 0
+        range="${upstream}..HEAD"
+        unsigned=$(git log --pretty=format:'%H %G? %s' "$range" 2>/dev/null | grep -E '^[a-f0-9]+ N ' || true)
+        if [ -n "$unsigned" ]; then
+          echo "ERROR: Unsigned commits found:"
+          echo "$unsigned" | while IFS=' ' read -r hash status msg; do
+            echo "  $hash $msg"
+          done
+          echo ""
+          echo "Sign commits with: git rebase --exec 'git commit --amend --no-edit -S' $upstream"
+          exit 1
+        fi
