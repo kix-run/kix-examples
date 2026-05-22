@@ -81,6 +81,9 @@ you will see in the examples.
   strings — they carry the dep edges Kix uses to order deploys.
 - **Root** — the "main" resource of a package. For a service-shaped
   package, this is usually the Service other workloads should call.
+- **`meta.provides`** — a list of capability markers a package
+  advertises, such as `[ "reverse-proxy" ]`. Rules and packages can
+  match on these markers instead of fragile names or descriptions.
 - **Flavor** — a platform profile (`kix.flavors.kind`, `.k3s`, `.eks`,
   ...). Sets defaults that match the target environment.
 - **Scorecard** — Kix's compile-time rule engine. Rules can run at

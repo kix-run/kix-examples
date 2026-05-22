@@ -21,15 +21,15 @@ turns on three things: one built-in rule category, one package-level
 custom rule, and one cluster-level custom rule.
 
 **You'll learn:** how to enable the scorecard, how to use built-ins,
-how to override severity, how to write custom rules at different
-levels, and which findings can fail the build.
+how to override severity, how to scope custom rules with
+`meta.provides`, and which findings can fail the build.
 
 ## Layout
 
 ```
 cluster.nix                # the cluster — instances, namespaces, wiring
 scorecard.nix              # the rules we want true about the cluster
-reverse-proxy-package.nix  # unchanged from 05
+reverse-proxy-package.nix  # proxy package, plus a capability marker for rules
 ```
 
 The scorecard lives in its own file because it is the focus of this
@@ -50,8 +50,8 @@ scorecard = import ./scorecard.nix { inherit lib kix; };
   enable = true;
 
   # Per-rule severity override. Key is `<category>.<rule>`.
-  # Lifts a built-in from "warning" to "error" so the build fails
-  # (not just warns) if a probe is missing.
+  # Raises a built-in from "warning" to "error" so the build fails
+  # if a probe is missing.
   ruleOverrides.byRule."reliability.hasProbes".severity = "error";
 
   rules = {

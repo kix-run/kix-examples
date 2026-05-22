@@ -24,6 +24,8 @@ let
   # description means the rule keeps working through renames.
   isProxy =
     inst:
+    # Cluster-level rules inspect built instances, so the package
+    # metadata is under `inst._meta.packageMeta`.
     builtins.elem "reverse-proxy" (inst._meta.packageMeta.provides or [ ]);
 in
 {
@@ -48,9 +50,8 @@ in
       severity = "error";
       tags = [ "reliability" "kix-examples" ];
 
-      # Only run on reverse-proxy instances. The rule context here is
-      # the *package*, not the instance view — so we check
-      # `meta.provides` directly (no `_meta` prefix needed).
+      # Only run on reverse-proxy packages. `appliesTo` receives the
+      # package metadata directly, so this checks `meta.provides`.
       appliesTo =
         { meta, ... }:
         builtins.elem "reverse-proxy" (meta.provides or [ ]);
