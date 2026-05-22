@@ -1,20 +1,10 @@
-# reverse-proxy-package.nix — nginx reverse-proxy in front of a
-# `backend` dep.
+# reverse-proxy-package.nix — nginx reverse-proxy in front of a `backend`
+# dep.
 #
-# Shaped exactly like a real Kix package (see kix/packages/echo-server in
-# kixpkgs): an attrset with `meta` + `build`, where `build` declares the
-# deps it needs as named args. Imported from cluster.nix via:
-#
-#   let reverseProxyPackage = import ./reverse-proxy-package.nix; in ...
-#
-# Note the separation: this file is the *package* (named for what it is,
-# a reverse-proxy). The cluster instantiates it as an instance called
-# `gateway` (named for the role it plays). Kix keeps those concepts
-# distinct — one package can back many instances.
-#
-# This is what a local-to-this-repo package looks like today. Kix has
-# no built-in extension point for adding extra packages to mkFlake's
-# catalog, so we just import the file directly.
+# This file is a Kix *package*: an attrset with `meta` and `build`. It's
+# imported by cluster.nix and instantiated there as an `instance` named
+# `gateway`. Same shape as the real packages in kix/packages/ in
+# kixpkgs (see `echo-server` for a minimal one).
 
 {
   meta = {
@@ -22,6 +12,24 @@
     description = "nginx reverse-proxy in front of a backend Service";
   };
 
+  # The build function is called once per instance, by Kix. It receives
+  # a handful of named args:
+  #
+  #   self    — fixpoint over this package's own resources. Lets you
+  #             write `self.configmap.out.name` so the Deployment can
+  #             reference the ConfigMap built in the same package.
+  #
+  #   scope   — per-instance context provided by Kix. Carries the
+  #             instance name, target namespace, selector labels, plus
+  #             helpers (`mkResource`, `mkDeployment`, ...) that stamp
+  #             Kix machinery onto raw K8s manifests.
+  #
+  #   kix     — the Kix stdlib. Helpers like `kix.port` and
+  #             `kix.service.fromWorkload`.
+  #
+  #   backend — a *dep*. The cluster wires it to a specific instance
+  #             (see cluster.nix). Inside the package it appears as an
+  #             `out` API: `backend.out.fqdn`, `backend.out.port`, ...
   build =
     {
       self,
@@ -31,14 +39,22 @@
       ...
     }:
     let
+      # Convention: name resources after the instance they belong to.
+      # Here `scope.instanceName` is "gateway" (set in cluster.nix).
       name = scope.instanceName;
     in
     {
-      # nginx.conf — proxies / to the backend's in-cluster DNS name.
-      # The FQDN and port both come from the dep, not from hardcoded
-      # strings. Kix also threads the dep through string context, so
-      # this ConfigMap ends up with a `kix.dev/depends-on` edge to
-      # the backend.
+      # ── ConfigMap with nginx.conf ───────────────────────────────────
+      # `scope.mkResource` wraps a plain K8s manifest attrset. It
+      # stamps the namespace, adds Kix-managed labels and annotations,
+      # and exposes the `out` API (`out.name`, `out.fqdn`, ...) for
+      # downstream consumers.
+      #
+      # The interpolation `${backend.out.fqdn}` looks like a normal
+      # string substitution. It also carries Nix string context, which
+      # Kix uses to stamp a `kix.dev/depends-on` annotation onto this
+      # ConfigMap — that's how the deploy DAG learns the backend must
+      # be applied first.
       configmap = scope.mkResource {
         apiVersion = "v1";
         kind = "ConfigMap";
@@ -57,6 +73,22 @@
         '';
       };
 
+      # ── Deployment ──────────────────────────────────────────────────
+      # `scope.mkDeployment` is like `mkResource` but specialised for
+      # workloads: it fills in standard labels and selector matching
+      # automatically. `scope.selectorLabels` is the pre-baked label
+      # set for this instance, so the Service below can reuse it
+      # without manual coordination.
+      #
+      # `|> scope.mkDeployment` is the Nix pipe operator — the same as
+      # `scope.mkDeployment { ... }`, read left-to-right. (Requires the
+      # `pipe-operators` experimental feature in your Nix config.)
+      #
+      # `self.configmap.out.name` reaches *back* into this same
+      # package's ConfigMap and reads its real K8s name. Going via
+      # `.out.name` rather than hardcoding the string means the
+      # Deployment carries a Kix dep edge on the ConfigMap, so a rebuilt
+      # ConfigMap forces a Deployment rollout.
       deployment =
         {
           inherit name;
@@ -69,6 +101,8 @@
                   name = "nginx";
                   image = "nginx:1.27-alpine";
                   imagePullPolicy = "IfNotPresent";
+                  # `kix.port "http" 80` is shorthand for
+                  # `{ name = "http"; containerPort = 80; }`.
                   ports = [ (kix.port "http" 80) ];
                   readinessProbe = {
                     httpGet = {
@@ -97,6 +131,11 @@
         }
         |> scope.mkDeployment;
 
+      # ── Service ─────────────────────────────────────────────────────
+      # `kix.service.fromWorkload` derives a Service manifest from a
+      # workload: the selector and ports come from the Deployment so
+      # they can't drift out of sync. We then run the result through
+      # `scope.mkResource` to wrap it like any other Kix resource.
       service =
         self.deployment
         |> kix.service.fromWorkload {
@@ -112,6 +151,12 @@
         }
         |> scope.mkResource;
 
+      # ── Root ────────────────────────────────────────────────────────
+      # `root` is a convention: it's the "main" resource of this
+      # package — what other packages get when they reference *this*
+      # instance through `<thisInstance>.out.<x>`. For a service-shaped
+      # package the Service is the natural root, since that's what
+      # other workloads talk to.
       root = self.service;
     };
 }

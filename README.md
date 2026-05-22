@@ -57,6 +57,46 @@ kix deploy 02-service-dep -y
 kix pf 02-service-dep gateway 8080:80
 ```
 
+## Glossary
+
+If you know K8s but are new to Nix/Kix, these are the terms that
+show up most.
+
+**Kix**
+
+- **Package** — a parameterised blueprint for a K8s service. Closest
+  analogue: a Helm chart, but evaluated by Nix.
+- **Instance** — a deployed copy of a package, with config and deps
+  wired in. Defined under `instances.<ns>.<name>` in `cluster.nix`.
+- **Dep** — a reference from one instance to another
+  (`deps.backend = ref.platform.backend;`). An explicit edge in the
+  service graph.
+- **Scope** — per-instance context Kix passes into a package's `build`
+  function. Carries the instance name, target namespace, label
+  conventions, and helpers like `mkResource` / `mkDeployment`.
+- **`out`** — the public interface of a resource or instance: `name`,
+  `fqdn`, `port`, `selector`, etc. Use these instead of hardcoded
+  strings — they carry the dep edges Kix uses to order deploys.
+- **Root** — the "main" resource of a package; what other packages
+  receive when they reference *this* instance.
+- **Flavor** — a platform profile (`kix.flavors.kind`, `.k3s`, `.eks`,
+  ...). Sets defaults that match the target environment.
+
+**Nix language**
+
+- **Attrset** — a dictionary / map / record. Written `{ a = 1; b = "x"; }`.
+- **`inherit foo`** — shorthand for `foo = foo;`. Copies a binding from
+  the surrounding scope into an attrset.
+- **`let ... in ...`** — local variable bindings. Like `let` in JS or
+  `where` in Haskell.
+- **`{ x, y, ... }:`** — destructured function args. The `...` means
+  "and accept any other named args without complaint". Like `**kwargs`
+  in Python.
+- **`x |> myFunc`** — the pipe operator. Same as `myFunc(x)`, but reads
+  left-to-right. (Requires the `pipe-operators` experimental feature.)
+- **`${...}` inside `"..."`** — string interpolation, same as JS
+  template literals.
+
 ## Other useful kix commands
 
 ```sh
