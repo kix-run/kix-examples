@@ -3,9 +3,8 @@
 # Unchanged from 04-typed-options. See that example for the walkthrough
 # of the package shape (`meta` + `options` + `build`), the typed knobs
 # (`proxyPath`, `maxBodySize`), and what `lib` / `scope` / `kix` are.
-# 05 reuses it to demonstrate that *the same package* can back
-# multiple instances in a cluster — the lesson is in `cluster.nix`,
-# not here.
+# 05 reuses it to show the same package backing multiple instances.
+# The new lesson is in `cluster.nix`, not here.
 
 { scope, lib, kix }:
 

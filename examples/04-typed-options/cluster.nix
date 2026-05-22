@@ -6,8 +6,8 @@
 #
 # What's new: the gateway's `config` block now has typed knobs
 # (`proxyPath`, `maxBodySize`) declared and validated by the package
-# in ./reverse-proxy-package.nix. Misconfigure them and you get an
-# error from `nix build`, not a 5xx in production.
+# in ./reverse-proxy-package.nix. Bad values fail during `nix build`,
+# before nginx ever sees them.
 
 { kix, packages }:
 
@@ -38,10 +38,10 @@ kix.buildCluster {
           gateway = {
             package = reverseProxyPackage;
 
-            # Both options are typed in the package. Try giving
-            # `proxyPath` a value that doesn't start with `/`, or
-            # `maxBodySize` something like "1mb" (wrong suffix), and
-            # the build will fail with a type error.
+            # Both options are typed in the package. Try a
+            # `proxyPath` that does not start with `/`, or a
+            # `maxBodySize` such as "1mb" (wrong suffix), and the
+            # build will fail with a type error.
             config = {
               proxyPath = "/";
               maxBodySize = "10m";

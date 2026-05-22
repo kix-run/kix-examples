@@ -6,7 +6,8 @@
 
 The reverse-proxy package now declares typed configuration **options**.
 The cluster passes values in; the package validates them at build
-time. Typos become build errors, not runtime 5xx.
+time. A bad path or body-size value becomes a build error instead of a
+surprise in nginx.
 
 **You'll learn:** how a package exposes its config surface using
 `lib.mkOption` + `lib.types`, and how the cluster supplies values.
@@ -18,14 +19,13 @@ cluster.nix                # supplies option values for the gateway
 reverse-proxy-package.nix  # declares typed `options`
 ```
 
-## The package's options
+## The Options
 
 ```nix
 # In reverse-proxy-package.nix:
 options = {
   # `lib.types.strMatching` runs the regex at module-merge time.
-  # `proxyPath = "api"` (no leading slash) fails the build outright,
-  # before any K8s manifest is rendered.
+  # `proxyPath = "api"` fails before any K8s manifest is rendered.
   proxyPath = lib.mkOption {
     type = lib.types.strMatching "^/.*$";
     default = "/";
@@ -61,14 +61,15 @@ gateway = {
 ```
 
 Inside the package's `build` function, those values arrive as
-`config.proxyPath` and `config.maxBodySize` — same `config` arg
-you've seen since `01-hello-world`, but now richer and validated.
+`config.proxyPath` and `config.maxBodySize`. It is the same `config`
+argument you saw in `01-hello-world`; the difference is that the
+package now declares what values are valid.
 
 ## Why types here matter
 
-Without types, `proxyPath = "api"` would silently build, and the bug
-would surface as a 404 at request time. With `lib.types.strMatching`,
-the same typo gives you:
+Without types, `proxyPath = "api"` would build and nginx would serve a
+different route than you intended. With `lib.types.strMatching`, the
+same typo gives you:
 
 ```text
 error: A definition for option `proxyPath' is not of type
@@ -76,7 +77,7 @@ error: A definition for option `proxyPath' is not of type
        - In `<unknown-file>': "api"
 ```
 
-— at `nix build` time, before any pod runs.
+at `nix build` time, before any pod runs.
 
 ## Run
 
@@ -103,6 +104,4 @@ curl http://localhost:8080/
 ## Next
 
 Move on to [`05-multi-instance`](../05-multi-instance/), which uses
-the same package to back two different instances with different
-configs — the natural follow-on now that the package has knobs worth
-turning.
+the same package to run two gateways with different config.

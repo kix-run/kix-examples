@@ -1,11 +1,11 @@
 # kix-examples
 
-A tour of [Kix](https://kixops.dev) patterns, presented as a series of
-small clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
+A hands-on tour of [Kix](https://kixops.dev) patterns, using small
+clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
 
-Each example is a single folder under `examples/` containing its own
-`cluster.nix` and a focused `README.md`. They're numbered in order of
-increasing complexity — start at `01-hello-world` and walk forward.
+Each example has its own folder under `examples/`, with a `cluster.nix`
+and a focused `README.md`. They are numbered in order of increasing
+complexity. Start at `01-hello-world` and walk forward.
 
 > [!NOTE]
 > While `adamcharnock/kixpkgs` is private, `flake.nix` points at a local
@@ -28,7 +28,8 @@ increasing complexity — start at `01-hello-world` and walk forward.
 
 ## Quick start
 
-Four commands take you from nothing to a running Kix cluster:
+These commands take you from an empty kind cluster to a running Kix
+workload:
 
 ```sh
 # 1. Create the kind cluster (one-time)
@@ -59,15 +60,16 @@ kix pf 02-service-dep gateway 8080:80
 
 ## Glossary
 
-If you know K8s but are new to Nix/Kix, these are the terms that
-show up most.
+If you know Kubernetes but are new to Nix or Kix, these are the terms
+you will see in the examples.
 
 **Kix**
 
-- **Package** — a parameterised blueprint for a K8s service. Closest
-  analogue: a Helm chart, but evaluated by Nix.
-- **Instance** — a deployed copy of a package, with config and deps
-  wired in. Defined under `instances.<ns>.<name>` in `cluster.nix`.
+- **Package** — a parameterised blueprint for a Kubernetes service.
+  The closest analogue is a Helm chart, but evaluated by Nix.
+- **Instance** — one deployed copy of a package, with config and deps
+  wired in. Instances live under `instances.<ns>.<name>` in
+  `cluster.nix`.
 - **Dep** — a reference from one instance to another
   (`deps.backend = ref.platform.backend;`). An explicit edge in the
   service graph.
@@ -77,15 +79,15 @@ show up most.
 - **`out`** — the public interface of a resource or instance: `name`,
   `fqdn`, `port`, `selector`, etc. Use these instead of hardcoded
   strings — they carry the dep edges Kix uses to order deploys.
-- **Root** — the "main" resource of a package; what other packages
-  receive when they reference *this* instance.
+- **Root** — the "main" resource of a package. For a service-shaped
+  package, this is usually the Service other workloads should call.
 - **Flavor** — a platform profile (`kix.flavors.kind`, `.k3s`, `.eks`,
   ...). Sets defaults that match the target environment.
 - **Scorecard** — Kix's compile-time rule engine. Rules can run at
   `manifest`, `package`, `namespace`, or `cluster` level and have
   `info` / `warning` / `error` severity. Error findings at the first
   three levels fail the build; all findings land in
-  `result/kix-scorecard.json`. Examples 04 and 05 use this.
+  `result/kix-scorecard.json`. Example 06 uses this.
 
 **Nix language** — everything you'll meet in these examples:
 

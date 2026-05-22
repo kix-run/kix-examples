@@ -3,8 +3,13 @@
 #
 # This file is a Kix *package*: an attrset with `meta` and `build`. It's
 # imported by cluster.nix and instantiated there as an `instance` named
-# `gateway`. Same shape as the real packages in kix/packages/ in
-# kixpkgs (see `echo-server` for a minimal one).
+# `gateway`. Real packages in kixpkgs use the same shape.
+#
+# Recommended reading: 01-hello-world.
+#
+# What's new: `build` asks for a `backend` dep. Kix gives the package
+# the matched instance's `out` API, so the nginx config can point at
+# the backend without hardcoded Service names.
 
 {
   meta = {
@@ -44,7 +49,8 @@
       name = scope.instanceName;
     in
     {
-      # ── ConfigMap with nginx.conf ───────────────────────────────────
+      # ConfigMap with nginx.conf.
+      #
       # `scope.mkResource` wraps a plain K8s manifest attrset. It
       # stamps the namespace, adds Kix-managed labels and annotations,
       # and exposes the `out` API (`out.name`, `out.fqdn`, ...) for
@@ -76,7 +82,8 @@
         '';
       };
 
-      # ── Deployment ──────────────────────────────────────────────────
+      # Deployment.
+      #
       # `scope.mkDeployment` is like `mkResource` but specialised for
       # workloads: it fills in standard labels and selector matching
       # automatically. `scope.selectorLabels` is the pre-baked label
@@ -134,7 +141,8 @@
         }
         |> scope.mkDeployment;
 
-      # ── Service ─────────────────────────────────────────────────────
+      # Service.
+      #
       # `kix.service.fromWorkload` derives a Service manifest from a
       # workload: the selector and ports come from the Deployment so
       # they can't drift out of sync. We then run the result through
@@ -154,7 +162,8 @@
         }
         |> scope.mkResource;
 
-      # ── Root ────────────────────────────────────────────────────────
+      # Root.
+      #
       # `root` is a convention: it's the "main" resource of this
       # package — what other packages get when they reference *this*
       # instance through `<thisInstance>.out.<x>`. For a service-shaped

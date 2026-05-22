@@ -4,12 +4,10 @@
 # here is a direct copy, including its `options`), and earlier
 # examples (02, 03).
 #
-# What's new: nothing about the packages themselves. The new idea is
-# that **one package can back any number of instances**. Below, the
-# echo-server package and the reverse-proxy package each get
-# instantiated twice — once per namespace — with different config.
-# That's the package/instance split made concrete: blueprints in
-# files, deployed copies in `instances.<ns>.<name>`.
+# What's new: the packages themselves do not change. Instead, the same
+# echo-server package and reverse-proxy package are instantiated twice
+# with different config. The blueprint lives in the package file; each
+# deployed copy lives under `instances.<ns>.<name>`.
 
 { kix, packages }:
 
@@ -31,10 +29,9 @@ kix.buildCluster {
         };
 
         # ── v1 stack ───────────────────────────────────────────────
-        # Look closely: the two `package = ...` lines in v1 below
-        # match the two `package = ...` lines in v2 — *exactly* the
-        # same package values. Only `config` and namespace differ.
-        # That's the multi-instance pattern in a nutshell.
+        # The two `package = ...` lines in v1 match the two
+        # `package = ...` lines in v2. Only `config` and namespace
+        # differ. That's the multi-instance pattern.
         instances.app-v1 = {
           backend = {
             package = packages.echo-server;     # ← same package as in v2

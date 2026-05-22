@@ -51,6 +51,13 @@ That doesn't mean every example is a Nix tutorial — but:
   understand a snippet without bouncing back and forth between code
   and paragraphs.
 
+- **Keep the voice human, but make the concept do the work.** A little
+  informal engineer-to-engineer tone is welcome, but avoid clever
+  phrasing when a direct explanation would be clearer. Prefer concrete
+  consequences ("nginx rejects larger request bodies") over abstract
+  claims ("runtime 5xx", "scar tissue", "guardrail") unless the latter
+  genuinely helps the reader.
+
 - **Files that are unchanged from a prior example should say so**
   at the top — point the reader back rather than restating the
   walkthrough. Saves cognitive load and keeps each example focused

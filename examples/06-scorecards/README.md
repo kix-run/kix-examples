@@ -16,9 +16,9 @@ level errors land in `result/kix-scorecard.json` (see the note
 below). All findings appear in the JSON regardless.
 
 This example reuses the multi-instance shape from `05` so the
-cluster-level rule has something interesting to inspect. The
-scorecard turns on three rules — one built-in category, one
-package-level custom rule, one cluster-level custom rule.
+cluster-level rule has more than one gateway to inspect. The scorecard
+turns on three things: one built-in rule category, one package-level
+custom rule, and one cluster-level custom rule.
 
 **You'll learn:** how to enable the scorecard, how to use built-ins,
 how to override severity, how to write custom rules at different
@@ -32,9 +32,8 @@ scorecard.nix              # the rules we want true about the cluster
 reverse-proxy-package.nix  # unchanged from 05
 ```
 
-The scorecard lives in its own file because in this example it *is*
-the focus. `cluster.nix` just declares the cluster, then imports
-the rules:
+The scorecard lives in its own file because it is the focus of this
+example. `cluster.nix` declares the cluster, then imports the rules:
 
 ```nix
 # In cluster.nix:
@@ -71,10 +70,9 @@ scorecard = import ./scorecard.nix { inherit lib kix; };
 
 `kix.rules.reliability` bundles `hasProbes`, `boundedResources`,
 `hasResourceLimits`, `hasResourceRequests`, `gracefulShutdown`, and
-`hasPDB`. They run as `warning`/`info` by default — production
-hardening you can opt into rule-by-rule without writing any rule
-code. Severity overrides let you lift a single rule to `error`
-without forking it.
+`hasPDB`. They run as `warning`/`info` by default. Severity overrides
+let you raise one rule to `error` without copying or forking the
+built-in category.
 
 ### Rule 2 — `proxyMaxBodySizeMustBeExplicit` (package-level)
 
@@ -96,10 +94,9 @@ custom.proxyMaxBodySizeMustBeExplicit = {
 };
 ```
 
-Nginx silently rejects bodies larger than its default 1 MB. Encoding
-that lesson as a rule forces every cluster operator to set a value
-explicitly — the kind of one-liner that turns scar tissue into a
-permanent guardrail.
+Nginx rejects request bodies larger than its default 1 MB. Encoding
+that as a rule forces every reverse-proxy instance to set a value
+explicitly, instead of leaving the limit implicit.
 
 ### Rule 3 — `noProxyPathCollision` (cluster-level)
 
@@ -134,9 +131,9 @@ custom.noProxyPathCollision = {
 };
 ```
 
-Only cluster-level rules can catch this — a manifest-level rule sees
-one resource at a time, a package-level rule sees one instance.
-Cross-instance invariants need the cluster as input.
+Only a cluster-level rule can catch this. A manifest-level rule sees
+one resource at a time; a package-level rule sees one instance. Checks
+that compare instances need the cluster as input.
 
 > [!NOTE]
 > **Cluster-level findings don't currently fail `nix build` on their

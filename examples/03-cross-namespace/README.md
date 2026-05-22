@@ -1,12 +1,15 @@
 # 03 — Cross-namespace dep
 
+> **Recommended reading:** [02-service-dep](../02-service-dep/).
+> This example assumes you know how a package asks for `backend`.
+
 Same gateway-and-backend shape as `02-service-dep`, but the two
 instances now live in **different namespaces**: the backend in
 `platform`, the gateway in `app`.
 
-**You'll learn:** how to wire a dep across a namespace boundary using
-`ref.<ns>.<inst>`, and why being explicit at the boundary is worth a
-line of code.
+**You'll learn:** how to wire a dep across a namespace boundary with
+`ref.<ns>.<inst>`, and why explicit wiring is clearer at namespace
+boundaries.
 
 ## Layout
 
@@ -46,19 +49,18 @@ gateway = {
 
 ### Wait, doesn't Kix find it automatically?
 
-Yes — Kix's resolver has a cluster-wide fallback that would discover
+Yes. Kix's resolver has a cluster-wide fallback that would discover
 `backend` in `platform` even without the `deps` line. Reasons to
 write it out anyway:
 
 - **Visibility.** A reader of `app/gateway` sees the dep without
   jumping namespaces.
 - **Safety.** The fallback is convenient for platform imports (DNS,
-  CNI, etc.) but means two unrelated namespaces could race for the
-  same generic name. Explicit `ref` lines never race.
+  CNI, etc.), but two unrelated namespaces can still use the same
+  generic instance name. Explicit `ref` lines avoid that ambiguity.
 - **Refactor-resistance.** If someone later renames `platform.backend`
-  or adds another `backend` elsewhere, the explicit `ref` keeps
-  pointing at one specific instance — the auto-resolution would
-  silently switch.
+  or adds another `backend` elsewhere, the explicit `ref` still points
+  at one specific instance.
 
 See [kixpkgs issue #19](https://github.com/adamcharnock/kixpkgs/issues/19)
 for a discussion on making cross-namespace resolution opt-in.
@@ -82,8 +84,8 @@ The gateway in `app` is proxying to the backend in `platform`.
 
 - **Drop the `deps` line.** Comment it out and re-run
   `kix deploy 03-cross-namespace -y`. It still works — that's the
-  cluster-wide auto-resolution the explicit line was guarding
-  against.
+  cluster-wide fallback. The explicit line is there to make the
+  boundary crossing obvious.
 - **Cause a collision.** Add a second `backend` instance in a new
   namespace and watch what happens.
 - **Inspect the dep graph:** `kix inspect 03-cross-namespace`.

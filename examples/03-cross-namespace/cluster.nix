@@ -6,20 +6,24 @@
 #   platform — owns `backend` (an echo-server)
 #   app      — owns `gateway` (the reverse-proxy)
 #
-# Because they're in separate namespaces, name-matching alone wouldn't
-# find a `backend` for the gateway from inside the `app` namespace, so
-# we wire the dep out explicitly using `ref`:
+# Because they're in separate namespaces, we write the dependency
+# explicitly using `ref`:
 #
 #   deps.backend = ref.platform.backend;
 #
-# That's the same `ref` introduced (but unused) in 02. Here it earns
-# its keep.
+# That's the same `ref` introduced in 02. Here we use it to point at
+# one exact instance outside the gateway's namespace.
 #
-# Kix actually *would* find `backend` cluster-wide via its
-# other-namespace fallback (see kix/lib/architecture.md on the
-# resolver). We're not relying on that — the example is about being
-# explicit when crossing a boundary. See kixpkgs issue #19 for the
-# discussion on making cross-namespace resolution opt-in.
+# Kix currently has an other-namespace fallback resolver, so this would
+# still work without `deps.backend`. This example writes the dependency
+# anyway because namespace boundaries are easier to review when they are
+# visible at the call site. See kixpkgs issue #19 for the discussion on
+# making cross-namespace resolution opt-in.
+#
+# Recommended reading: 02-service-dep.
+#
+# What's new: `deps.backend = ref.platform.backend`, which wires a dep
+# across namespaces instead of relying on same-namespace name matching.
 
 { kix, packages }:
 
@@ -41,7 +45,7 @@ kix.buildCluster {
         };
 
         # Platform-owned services. Things like databases, caches, and
-        # other shared infrastructure tend to live in their own
+        # other shared infrastructure may live in their own
         # namespace so application teams don't accidentally collide
         # with them.
         instances.platform = {

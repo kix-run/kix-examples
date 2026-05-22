@@ -10,8 +10,8 @@
 #   noProxyPathCollision              — custom, cluster-level
 #
 # This file is a function `{ lib, kix }: { ... }` so it can use
-# `kix.rules.*` and `lib.*` while keeping cluster.nix focused on the
-# cluster itself.
+# `kix.rules.*` and `lib.*`. cluster.nix imports it and stays focused
+# on the cluster shape.
 
 { lib, kix }:
 
@@ -28,8 +28,8 @@ in
   enable = true;
 
   # Per-rule severity override. Key is `<category>.<rule>`.
-  # Lifts a built-in from "warning" to "error" so the build fails
-  # (not just warns) if a probe is missing.
+  # Raises a built-in from "warning" to "error" so the build fails
+  # if a probe is missing.
   ruleOverrides.byRule."reliability.hasProbes".severity = "error";
 
   rules = {
@@ -38,9 +38,8 @@ in
     #    gracefulShutdown, hasPDB.
     reliability = kix.rules.reliability;
 
-    # 2. Custom package-level rule. Fires per-instance, with access
-    #    to `config` (resolved options) and `resources` for that one
-    #    instance.
+    # 2. Custom package-level rule. Runs once per instance, with
+    #    access to that instance's resolved `config` and `resources`.
     custom.proxyMaxBodySizeMustBeExplicit = {
       description = "Reverse-proxy gateways must set maxBodySize explicitly (not the 1m default).";
       level = "package";
@@ -58,17 +57,16 @@ in
           [
             {
               message =
-                "instance '${instanceName}' uses the unsafe default maxBodySize '1m'. "
-                + "nginx silently rejects larger bodies — set this explicitly.";
+                "instance '${instanceName}' uses the default maxBodySize '1m'. "
+                + "nginx rejects larger request bodies — set this explicitly.";
             }
           ]
         else
           [ ];
     };
 
-    # 3. Custom cluster-level rule. Sees `allInstances` (across every
-    #    namespace). The only level that can catch cross-instance
-    #    invariants.
+    # 3. Custom cluster-level rule. Sees `allInstances` across every
+    #    namespace, so it can compare one instance with another.
     custom.noProxyPathCollision = {
       description = "No two reverse-proxy gateways may share the same proxyPath.";
       level = "cluster";

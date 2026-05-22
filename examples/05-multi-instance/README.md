@@ -5,17 +5,17 @@
 > [02-service-dep](../02-service-dep/),
 > [03-cross-namespace](../03-cross-namespace/).
 
-A Kix **package** is a parameterised blueprint; an **instance** is a
-deployed copy of it with config wired in. One package can back any
-number of instances — same code, different parameters.
+A Kix **package** is a parameterised blueprint. An **instance** is one
+deployed copy of that package with config wired in. One package can
+back any number of instances: same code, different parameters.
 
-This example puts two parallel mini-stacks in the same cluster:
+This example puts two small stacks in the same cluster:
 `app-v1` and `app-v2`, each with its own backend + gateway. Same
 packages, different instances, different config.
 
 **You'll learn:** how to instantiate the same package multiple times,
-and why the `package`/`instance` split is what makes Kix scale to a
-real cluster.
+and why the `package`/`instance` split matters once a cluster has more
+than one copy of the same shape.
 
 ## Layout
 
@@ -57,8 +57,8 @@ instances.app-v2 = {
 
 Kix renders each instance independently: four Deployments, four
 Services, four ConfigMaps, two namespaces. Each
-`deps.backend = ref.app-vN.backend` wires only its local pair —
-no cross-talk.
+`deps.backend = ref.app-vN.backend` wires only its local pair, so v1
+and v2 do not accidentally talk to each other.
 
 ## Run
 
@@ -80,7 +80,7 @@ curl http://localhost:8082/v2/   # → Response from app-v2
 
 - **Add a third stack.** Copy the v2 block, rename to `app-v3`, change
   the message and `proxyPath`. `kix deploy` and a third
-  `curl http://localhost:8083/v3/` should just work.
+  `curl http://localhost:8083/v3/` should work the same way.
 - **Inspect:** `kix list packages --cluster 05-multi-instance` shows
   which packages back which instances.
 - **Diff the rendered YAML:** `kix build 05-multi-instance` — the

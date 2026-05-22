@@ -1,13 +1,18 @@
 # 01-hello-world — the smallest possible Kix cluster.
 #
 # One echo-server in an `example-01` namespace. No dependencies, no
-# secrets, nothing fancy. Just enough to prove the Kix loop works:
+# secrets, and no local packages yet. This is just enough to prove the
+# Kix loop works:
 #
 #   edit cluster.nix -> nix build -> kubectl apply -> see the change.
 #
+# Recommended reading: none. This is the first example.
+#
+# What's new: the basic shape of a Kix cluster — flavor, namespaces,
+# and instances.
+#
 # New to Nix? The root README has a glossary covering every Nix
-# construct used in these examples — open it in a second tab and
-# refer back whenever the syntax surprises you.
+# construct used in these examples. Keep it nearby while you read.
 
 # Nix functions take their args as an attrset. This file is a function
 # that Kix calls with `kix` (the framework) and `packages` (the
@@ -21,8 +26,8 @@ kix.buildCluster {
 
   # `modules` is a list (whitespace-separated, no commas).
   modules = [
-    # Sets the kix flavour. These examples use kind (Kubernetes in Docker).
-    # Setting the flavour allows Kix to assume sensible defaults.
+    # Sets the Kix flavor. These examples use kind (Kubernetes in Docker).
+    # Setting the flavor allows Kix to assume sensible defaults.
     kix.flavors.kind
 
     # A module — an attrset describing part of the cluster.

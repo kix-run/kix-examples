@@ -5,9 +5,9 @@
 # and earlier examples (02/03/04).
 #
 # What's new: the `scorecard = ...` line below. The cluster turns on
-# Kix's rule engine and imports the rules from ./scorecard.nix —
-# that's where the interesting bit lives. The multi-instance shape
-# is kept so the cluster-level rule has something to inspect.
+# Kix's rule engine and imports rules from ./scorecard.nix. The
+# multi-instance shape stays in place so one rule can compare gateways
+# across the whole cluster.
 
 { kix, packages }:
 
@@ -28,7 +28,7 @@ kix.buildCluster {
         # ── Scorecard ────────────────────────────────────────────────
         # The whole rules block lives in ./scorecard.nix. cluster.nix
         # stays focused on what the cluster *contains*; the rules file
-        # owns what we want to be *true* about it.
+        # owns the checks we want to run against it.
         scorecard = import ./scorecard.nix { inherit lib kix; };
 
         namespaces = {

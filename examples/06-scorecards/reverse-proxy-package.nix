@@ -1,8 +1,8 @@
 # reverse-proxy-package.nix — nginx reverse-proxy with typed options.
 #
-# Unchanged from 04-typed-options. The interesting bit of 06 is in
-# ./scorecard.nix, not here. See 04 for the walkthrough of the
-# package shape and the typed options.
+# Unchanged from 04-typed-options. The new material in 06 is in
+# ./scorecard.nix, not here. See 04 for the walkthrough of the package
+# shape and the typed options.
 
 { scope, lib, kix }:
 

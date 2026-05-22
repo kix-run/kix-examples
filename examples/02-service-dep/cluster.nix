@@ -10,12 +10,18 @@
 #              for a `backend` dep — and Kix wires it to the instance
 #              named `backend` above, automatically, by name.
 #
+# Recommended reading: 01-hello-world.
+#
+# What's new: a local package whose build function asks for another
+# instance by name. Kix resolves that request to the `backend`
+# instance in the same namespace.
+#
 # When you `kix pf` the gateway and curl it, the request goes:
 #
 #   localhost:8080  →  gateway pod  →  backend Service  →  backend pod
 #
-# That round trip is what proves the wiring is real: no compile-time
-# string interpolation could fake an actual cluster-DNS lookup.
+# That round trip proves the wiring is real: nginx is resolving the
+# backend Service through cluster DNS.
 
 { kix, packages }:
 
@@ -52,10 +58,10 @@ kix.buildCluster {
             };
           };
 
-          # Gateway: nginx proxying to `backend`. Nothing here references
-          # the backend explicitly — the package itself declares the need
-          # for a `backend` instance, which Kix resolves to the instance
-          # above.
+          # Gateway: nginx proxying to `backend`. Nothing here points at
+          # the backend explicitly. The package declares the need for a
+          # `backend` instance, and Kix resolves that to the instance
+          # above because the names match.
           #
           # If you'd rather make the wiring explicit, write it out
           # explicitly using `ref`:

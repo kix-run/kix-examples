@@ -4,19 +4,18 @@
 # shape: attrset with `meta` + `build`, deps as named build args).
 #
 # What's new: this version is a *function* `{ scope, lib, kix }: { ... }`
-# so it can declare typed `options` using `lib.mkOption` / `lib.types`.
-# Kix auto-discovers which args we want and passes them in.
+# so Kix can pass in helpers such as `lib`, and the package can declare
+# typed `options` with `lib.mkOption` / `lib.types`.
 #
 # Two new knobs vs 02/03:
 #
-#   proxyPath       — path the proxy forwards. Type forces it to start
-#                     with `/`, so a typo like `api` (instead of `/api`)
-#                     fails at build time, not at request time.
+#   proxyPath       — path the proxy forwards. The type forces it to
+#                     start with `/`, so `api` fails during the build
+#                     instead of becoming a bad nginx route.
 #
-#   maxBodySize     — nginx `client_max_body_size`. nginx defaults to
-#                     1 MB silently, which has burned more file-upload
-#                     features than any of us care to admit. Making it
-#                     explicit (with a typed format) is a low-cost win.
+#   maxBodySize     — nginx `client_max_body_size`. nginx's default is
+#                     1 MB, which is easy to forget until uploads start
+#                     failing. Making it explicit is cheap insurance.
 
 { scope, lib, kix }:
 

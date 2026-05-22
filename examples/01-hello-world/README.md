@@ -5,11 +5,11 @@
 > multi-line strings, the pipe operator, `lib.mkOption`, etc.). Keep
 > it open in a second tab while you walk through these.
 
-The smallest possible Kix cluster: a single `echo-server` instance.
+The smallest useful Kix cluster: one `echo-server` instance in one
+namespace.
 
-**You'll learn:** how a Kix cluster is structured, how `kix deploy`
-builds + applies the manifests, and what the edit/build/apply loop
-feels like.
+**You'll learn:** where workloads live in `cluster.nix`, what
+`kix deploy` does, and how the edit/build/apply loop feels.
 
 ## What's in it
 
@@ -33,8 +33,7 @@ instances.example-01 = {
 
 ## Run
 
-From the repo root (kind cluster assumed already up — see the top-level
-[README](../../README.md) if not):
+From the repo root, with the kind cluster already running:
 
 ```sh
 kix deploy 01-hello-world -y
@@ -60,5 +59,6 @@ curl http://localhost:8080/
 
 ## Next
 
-Once this works, move on to [`02-service-dep`](../02-service-dep/) which
-adds a second service and shows how Kix wires one to another's URL.
+Once this works, move on to [`02-service-dep`](../02-service-dep/).
+It adds a second service and shows how Kix wires one workload to
+another.
