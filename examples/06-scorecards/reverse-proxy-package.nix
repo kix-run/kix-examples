@@ -1,8 +1,10 @@
 # reverse-proxy-package.nix — nginx reverse-proxy with typed options.
 #
-# Unchanged from 04-typed-options. The new material in 06 is in
-# ./scorecard.nix, not here. See 04 for the walkthrough of the package
-# shape and the typed options.
+# Mostly unchanged from 04-typed-options. The only addition for 06 is
+# `meta.provides = [ "reverse-proxy" ]` below — a capability marker
+# the scorecard rule uses to identify reverse-proxy instances without
+# string-matching the description. See 04 for the walkthrough of the
+# package shape and the typed options.
 
 { scope, lib, kix }:
 
@@ -10,6 +12,12 @@
   meta = {
     version = "0.0.2";
     description = "nginx reverse-proxy with typed config options";
+
+    # Capability marker. Packages declare what they *are*, and rules
+    # (or other packages) match on it. Used in ./scorecard.nix to
+    # scope rules to reverse-proxies. The same pattern is used in
+    # kixpkgs (`[ "sql-database" ]`, `[ "reflection" ]`, …).
+    provides = [ "reverse-proxy" ];
   };
 
   options = {

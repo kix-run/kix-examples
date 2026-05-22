@@ -81,9 +81,13 @@ custom.proxyMaxBodySizeMustBeExplicit = {
   level = "package";                # sees one instance's config + resources
   severity = "error";
 
-  # Scope the rule: only run on reverse-proxy instances.
+  # Scope the rule: only run on reverse-proxy instances. Matches on
+  # `meta.provides`, which the package declares (see
+  # ./reverse-proxy-package.nix). This is the canonical way Kix
+  # packages advertise capabilities — kixpkgs uses the same pattern
+  # for `"sql-database"`, `"reflection"`, etc.
   appliesTo = { meta, ... }:
-    (meta.description or "") == proxyDescription;
+    builtins.elem "reverse-proxy" (meta.provides or [ ]);
 
   # Fire if the instance still uses the default body size.
   check = { config, instanceName, ... }:

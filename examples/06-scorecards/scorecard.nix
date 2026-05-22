@@ -16,13 +16,15 @@
 { lib, kix }:
 
 let
-  # Reverse-proxy instances are identified by their package's
-  # `meta.description`. In production code you'd typically use a
-  # `meta.provides` capability marker; the description string is fine
-  # for a demo.
-  proxyDescription = "nginx reverse-proxy with typed config options";
-
-  isProxy = inst: (inst._meta.packageMeta.description or "") == proxyDescription;
+  # Reverse-proxy instances declare themselves via
+  # `meta.provides = [ "reverse-proxy" ]` (see ./reverse-proxy-package.nix).
+  # That's the canonical way Kix packages advertise their capability,
+  # used throughout kixpkgs (`[ "sql-database" ]`, `[ "reflection" ]`,
+  # `[ "vpn" ]`, etc.). Matching by capability rather than by name or
+  # description means the rule keeps working through renames.
+  isProxy =
+    inst:
+    builtins.elem "reverse-proxy" (inst._meta.packageMeta.provides or [ ]);
 in
 {
   enable = true;
@@ -46,10 +48,12 @@ in
       severity = "error";
       tags = [ "reliability" "kix-examples" ];
 
-      # Only run on reverse-proxy instances.
+      # Only run on reverse-proxy instances. The rule context here is
+      # the *package*, not the instance view — so we check
+      # `meta.provides` directly (no `_meta` prefix needed).
       appliesTo =
         { meta, ... }:
-        (meta.description or "") == proxyDescription;
+        builtins.elem "reverse-proxy" (meta.provides or [ ]);
 
       check =
         { config, instanceName, ... }:
