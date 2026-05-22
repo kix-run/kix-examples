@@ -1,0 +1,52 @@
+# lefthook.yml — pre-commit + commit-msg hooks for kix-examples.
+#
+# Install once:    lefthook install
+# Run on demand:   lefthook run pre-commit
+# Skip in a pinch: LEFTHOOK=0 git commit ...  (last resort)
+
+pre-commit:
+  commands:
+    check-clusters:
+      # Only run when something that could affect a cluster build
+      # changes. README-only commits skip the slow check.
+      glob: "{examples/**/*,flake.nix,flake.lock}"
+
+      # Build every cluster's activation and inspect the scorecard.
+      # Build failures catch Nix syntax, type errors, and manifest /
+      # package / namespace-level scorecard errors. The jq pass on
+      # the JSON catches cluster-level errors, which don't natively
+      # fail nix build (see examples/06-scorecards/README.md).
+      run: |
+        set -eu
+        FAIL=0
+        for d in examples/*/; do
+          c=$(basename "$d")
+          echo "→ cluster-$c"
+          out=$(nix build --no-link --print-out-paths \
+            --extra-experimental-features pipe-operators \
+            ".#cluster-$c-activation")
+          report="$out/kix-scorecard.json"
+          if [ -f "$report" ]; then
+            errors=$(jq '.summary.errors' "$report")
+            if [ "$errors" -gt 0 ]; then
+              echo "  ✗ $errors scorecard error(s):"
+              jq '.findings[] | select(.severity=="error")' "$report"
+              FAIL=1
+            fi
+          fi
+        done
+        if [ "$FAIL" -ne 0 ]; then
+          echo "Pre-commit failed: one or more clusters have scorecard errors."
+          exit 1
+        fi
+
+commit-msg:
+  commands:
+    no-co-authored-by:
+      # Matches the convention used in the kixpkgs repo.
+      run: |
+        if grep -qi "^Co-Authored-By:" "{1}"; then
+          echo "ERROR: Co-Authored-By trailers are not allowed in commit messages."
+          echo "Remove the line and try again."
+          exit 1
+        fi

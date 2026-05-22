@@ -5,7 +5,11 @@
   env.GREET = "devenv";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.git ];
+  packages = [
+    pkgs.git
+    pkgs.lefthook # git hooks runner — run `lefthook install` after cloning
+    pkgs.jq # used by the pre-commit hook to read kix-scorecard.json
+  ];
 
   # https://devenv.sh/languages/
   # languages.rust.enable = true;
