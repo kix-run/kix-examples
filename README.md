@@ -5,7 +5,7 @@ small clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
 
 Each example is a single folder under `examples/` containing its own
 `cluster.nix` and a focused `README.md`. They're numbered in order of
-increasing complexity — start at `01-hello` and walk forward.
+increasing complexity — start at `01-hello-world` and walk forward.
 
 > [!NOTE]
 > While `adamcharnock/kixpkgs` is private, `flake.nix` points at a local
@@ -35,10 +35,10 @@ Four commands take you from nothing to a running Kix cluster:
 kind create cluster --config kind-config.yaml
 
 # 2. Build and apply
-kix deploy 01-hello -y
+kix deploy 01-hello-world -y
 
 # 3. Port-forward in this terminal (Ctrl-C to stop)
-kix pf 01-hello hello 8080:80
+kix pf 01-hello-world hello-world 8080:80
 ```
 
 Then in another terminal:
@@ -81,21 +81,55 @@ show up most.
   receive when they reference *this* instance.
 - **Flavor** — a platform profile (`kix.flavors.kind`, `.k3s`, `.eks`,
   ...). Sets defaults that match the target environment.
+- **Scorecard** — Kix's compile-time rule engine. Rules can run at
+  `manifest`, `package`, `namespace`, or `cluster` level and have
+  `info` / `warning` / `error` severity. Error findings at the first
+  three levels fail the build; all findings land in
+  `result/kix-scorecard.json`. Examples 04 and 05 use this.
 
-**Nix language**
+**Nix language** — everything you'll meet in these examples:
 
-- **Attrset** — a dictionary / map / record. Written `{ a = 1; b = "x"; }`.
-- **`inherit foo`** — shorthand for `foo = foo;`. Copies a binding from
-  the surrounding scope into an attrset.
-- **`let ... in ...`** — local variable bindings. Like `let` in JS or
-  `where` in Haskell.
-- **`{ x, y, ... }:`** — destructured function args. The `...` means
-  "and accept any other named args without complaint". Like `**kwargs`
-  in Python.
-- **`x |> myFunc`** — the pipe operator. Same as `myFunc(x)`, but reads
-  left-to-right. (Requires the `pipe-operators` experimental feature.)
-- **`${...}` inside `"..."`** — string interpolation, same as JS
-  template literals.
+- **Attrset** — a dictionary / map / record. Written
+  `{ a = 1; b = "x"; }`. Each pair ends in `;` (not `,`).
+- **`a.b.c = value;`** — dotted-path shorthand for nested attrsets.
+  `instances.app.web = { ... };` is the same as
+  `instances = { app = { web = { ... }; }; };`.
+- **`[ a b c ]`** — a list. Items separated by **whitespace**, no
+  commas. `[ "one" "two" "three" ]`.
+- **`f x y`** — function application. No parens, just whitespace. The
+  JS equivalent is `f(x, y)`.
+- **`(f x)` / `(...)`** — parens are only for grouping (when you need
+  to disambiguate). `[ (kix.port "http" 80) ]` would otherwise be
+  parsed as three list items.
+- **`# comment`** — line comment, same as Python/shell.
+- **`"foo"` strings** — regular strings, can use `\n` etc.
+- **`''...''` strings** — multi-line strings. Common indentation is
+  stripped automatically (like Python's `textwrap.dedent`). nginx
+  configs and shell snippets in these examples use this form.
+- **`${expr}` inside a string** — string interpolation, same as JS
+  template literals. Works in both `"..."` and `''...''`.
+- **`inherit foo`** — shorthand for `foo = foo;`. Copies a binding
+  from the surrounding scope into an attrset.
+- **`let x = ...; in expr`** — local variable bindings. Like `let` in
+  JS or `where` in Haskell.
+- **`arg: expr` and `{ x, y, ... }: expr`** — anonymous functions.
+  Second form destructures an attrset; `...` means "accept any other
+  named args without complaint" (like `**kwargs` in Python).
+- **`a // b`** — attrset merge; right wins on collisions. JS
+  equivalent: `{ ...a, ...b }`.
+- **`x or default`** — fallback when an attr is missing.
+  `(config.foo or "default")`.
+- **`x |> f`** — the pipe operator. Same as `f(x)`, but reads
+  left-to-right. (Requires the `pipe-operators` experimental feature
+  in your Nix config.)
+- **`import ./file.nix`** — evaluate the file and return its value.
+- **`builtins.X`** — the small built-in stdlib (`builtins.filter`,
+  `builtins.foldl'`, `builtins.attrNames`, …).
+- **`lib.X`** — the nixpkgs standard library; richer helpers
+  (`lib.concatLists`, `lib.filterAttrs`, `lib.types`, `lib.mkOption`).
+- **`lib.mkOption { type = ...; default = ...; }`** — declares a typed
+  config knob in a Kix package (or any NixOS module). Used in
+  example 04.
 
 ## Other useful kix commands
 
@@ -120,7 +154,10 @@ kind delete cluster --name kix-demo
 flake.nix                   # mkFlake exposing every example as cluster-<name>
 kind-config.yaml            # kind cluster config (single control-plane node)
 examples/
-  01-hello/                 # README + cluster.nix
+  01-hello-world/           # README + cluster.nix
   02-service-dep/           # README + cluster.nix + reverse-proxy-package.nix
   03-cross-namespace/       # README + cluster.nix + reverse-proxy-package.nix
+  04-typed-options/         # README + cluster.nix + reverse-proxy-package.nix
+  05-multi-instance/        # README + cluster.nix + reverse-proxy-package.nix
+  06-scorecards/            # README + cluster.nix + scorecard.nix + reverse-proxy-package.nix
 ```

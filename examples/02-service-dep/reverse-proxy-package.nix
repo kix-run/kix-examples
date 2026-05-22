@@ -50,11 +50,14 @@
       # and exposes the `out` API (`out.name`, `out.fqdn`, ...) for
       # downstream consumers.
       #
-      # The interpolation `${backend.out.fqdn}` looks like a normal
-      # string substitution. It also carries Nix string context, which
-      # Kix uses to stamp a `kix.dev/depends-on` annotation onto this
-      # ConfigMap — that's how the deploy DAG learns the backend must
-      # be applied first.
+      # The `''...''` syntax is a Nix multi-line string — common
+      # indentation gets stripped, like Python's textwrap.dedent.
+      # Interpolations like `${backend.out.fqdn}` work inside it.
+      #
+      # That interpolation looks like a normal string substitution, but
+      # it also carries Nix string context, which Kix uses to stamp a
+      # `kix.dev/depends-on` annotation onto this ConfigMap — that's
+      # how the deploy DAG learns the backend must be applied first.
       configmap = scope.mkResource {
         apiVersion = "v1";
         kind = "ConfigMap";

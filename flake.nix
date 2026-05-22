@@ -18,9 +18,12 @@
     inputs.kixpkgs.lib.mkFlake {
       inherit inputs;
       clusters = {
-        "01-hello" = ./examples/01-hello/cluster.nix;
+        "01-hello-world" = ./examples/01-hello-world/cluster.nix;
         "02-service-dep" = ./examples/02-service-dep/cluster.nix;
         "03-cross-namespace" = ./examples/03-cross-namespace/cluster.nix;
+        "04-typed-options" = ./examples/04-typed-options/cluster.nix;
+        "05-multi-instance" = ./examples/05-multi-instance/cluster.nix;
+        "06-scorecards" = ./examples/06-scorecards/cluster.nix;
       };
     };
 }

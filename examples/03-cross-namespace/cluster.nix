@@ -30,7 +30,6 @@ kix.buildCluster {
   name = "03-cross-namespace";
 
   modules = [
-    # Sets the kind flavour: kindnet CNI, ephemeral storage, no LoadBalancer.
     kix.flavors.kind
 
     (
