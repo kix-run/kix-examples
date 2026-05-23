@@ -12,8 +12,8 @@ be approachable to someone who has never seen Nix syntax before.
 That doesn't mean every example is a Nix tutorial — but:
 - The root README must carry a glossary covering every Nix construct
   the examples use.
-- The first example (`01-hello-world`) must carry a "New to Nix?" pointer
-  to that glossary.
+- The first example (`02-hello-world`) must carry a "New to Nix?"
+  pointer to that glossary.
 - The first occurrence of a tricky Nix construct (multi-line strings,
   pipe operator, `let ... in`, function-with-rest-args, etc.) should
   get a one-line inline note explaining it. Don't repeat the note on
@@ -22,9 +22,9 @@ That doesn't mean every example is a Nix tutorial — but:
 ## Authoring rules
 
 - **Concepts in examples must be supported by prior examples.** Don't
-  reference `deps`, `ref`, `aliases`, etc. in `02-` if `01-` hasn't
-  introduced them. A reader walking the examples in order should never
-  hit a term they haven't seen before.
+  reference `deps`, `ref`, `aliases`, etc. before an earlier example has
+  introduced them. A reader walking the examples in order should never hit a
+  term they haven't seen before.
 
 - **Every example must declare its prerequisites in both the code and
   the README.** Engineers often skip READMEs, so the code header

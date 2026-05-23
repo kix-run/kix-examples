@@ -1,21 +1,10 @@
 # reverse-proxy-package.nix — nginx reverse-proxy with typed options.
 #
-# Recommended reading: 02-service-dep (which introduced the package
-# shape: attrset with `meta` + `build`, deps as named build args).
-#
-# What's new: this version is a *function* `{ scope, lib, kix }: { ... }`
-# so Kix can pass in helpers such as `lib`, and the package can declare
-# typed `options` with `lib.mkOption` / `lib.types`.
-#
-# Two new knobs vs 02/03:
-#
-#   proxyPath       — path the proxy forwards. The type forces it to
-#                     start with `/`, so `api` fails during the build
-#                     instead of becoming a bad nginx route.
-#
-#   maxBodySize     — nginx `client_max_body_size`. nginx's default is
-#                     1 MB, which is easy to forget until uploads start
-#                     failing. Making it explicit is cheap insurance.
+# Mostly unchanged from 09-typed-options. The only addition for 19 is
+# `meta.provides = [ "reverse-proxy" ]` below — a capability marker
+# the scorecard rule uses to identify reverse-proxy instances without
+# string-matching the description. See 09 for the walkthrough of the
+# package shape and the typed options.
 
 { scope, lib, kix }:
 
@@ -23,13 +12,14 @@
   meta = {
     version = "0.0.2";
     description = "nginx reverse-proxy with typed config options";
+
+    # Capability marker. Packages declare what they *are*, and rules
+    # (or other packages) match on it. Used in ./scorecard.nix to
+    # scope rules to reverse-proxies. The same pattern is used in
+    # kixpkgs (`[ "sql-database" ]`, `[ "reflection" ]`, …).
+    provides = [ "reverse-proxy" ];
   };
 
-  # `options` declares the package's config surface. Each option is
-  # built with `lib.mkOption` (a nixpkgs helper) and has a `type`, a
-  # `default`, a `description`, and optionally an `example`. Whatever
-  # the cluster passes in `config = { ... }` is checked against these
-  # types before any K8s manifest gets rendered.
   options = {
     proxyPath = lib.mkOption {
       # `lib.types.strMatching` runs the regex at module-merge time;
@@ -105,6 +95,14 @@
                       port = 80;
                     };
                     periodSeconds = 5;
+                  };
+                  livenessProbe = {
+                    httpGet = {
+                      path = "/healthz";
+                      port = 80;
+                    };
+                    periodSeconds = 10;
+                    failureThreshold = 3;
                   };
                   volumeMounts = [
                     {

@@ -1,6 +1,6 @@
-# 03-cross-namespace — wiring a dep across a namespace boundary.
+# 08-namespace-deps — wiring a dep across a namespace boundary.
 #
-# Same idea as 02 (a gateway proxying to a backend) but the two
+# Same idea as 06 (a gateway proxying to a backend) but the two
 # instances now live in different namespaces:
 #
 #   platform — owns `backend` (an echo-server)
@@ -11,7 +11,7 @@
 #
 #   deps.backend = ref.platform.backend;
 #
-# That's the same `ref` introduced in 02. Here we use it to point at
+# That's the same `ref` introduced in 06. Here we use it to point at
 # one exact instance outside the gateway's namespace.
 #
 # Kix currently has an other-namespace fallback resolver, so this would
@@ -20,7 +20,7 @@
 # visible at the call site. See kixpkgs issue #19 for the discussion on
 # making cross-namespace resolution opt-in.
 #
-# Recommended reading: 02-service-dep.
+# Recommended reading: 06-service-dep.
 #
 # What's new: `deps.backend = ref.platform.backend`, which wires a dep
 # across namespaces instead of relying on same-namespace name matching.
@@ -31,7 +31,7 @@ let
   reverseProxyPackage = import ./reverse-proxy-package.nix;
 in
 kix.buildCluster {
-  name = "03-cross-namespace";
+  name = "08-namespace-deps";
 
   modules = [
     kix.flavors.kind
@@ -60,6 +60,7 @@ kix.buildCluster {
         # Application-owned services. The gateway reaches across into
         # `platform` for its backend.
         instances.app = {
+          # region:crossNamespaceDep
           gateway = {
             package = reverseProxyPackage;
             # Explicit cross-namespace wiring. Without this line,
@@ -68,6 +69,7 @@ kix.buildCluster {
             # the boundary crossing visible at the call site.
             deps.backend = ref.platform.backend;
           };
+          # endregion:crossNamespaceDep
         };
       }
     )

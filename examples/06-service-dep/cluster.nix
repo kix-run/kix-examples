@@ -1,6 +1,6 @@
-# 02-service-dep — one service talking to another.
+# 06-service-dep — one service talking to another.
 #
-# Two instances in an `example-02` namespace:
+# Two instances in a `tutorial-06` namespace:
 #
 #   backend  — an echo-server (existing package in kixpkgs). Just
 #              answers HTTP requests with a fixed message.
@@ -10,7 +10,7 @@
 #              for a `backend` dep — and Kix wires it to the instance
 #              named `backend` above, automatically, by name.
 #
-# Recommended reading: 01-hello-world.
+# Recommended reading: 02-hello-world.
 #
 # What's new: a local package whose build function asks for another
 # instance by name. Kix resolves that request to the `backend`
@@ -28,26 +28,29 @@
 # `let ... in expr` is Nix's local-binding syntax (think `let` in JS).
 # Here we import our local package once and bind it to a name we'll
 # reuse below.
+# region:localPackageImport
 let
   reverseProxyPackage = import ./reverse-proxy-package.nix;
 in
+# endregion:localPackageImport
 kix.buildCluster {
-  name = "02-service-dep";
+  name = "06-service-dep";
 
   modules = [
     kix.flavors.kind
 
     # A module written as a function. `{ ref, ... }:` destructures
     # the args Kix passes in — we accept `ref` (you'll see it used
-    # in 03) and `...` means "ignore any other named args".
+    # in 08) and `...` means "ignore any other named args".
     (
       { ref, ... }:
       {
         namespaces = {
-          example-02 = { };
+          tutorial-06 = { };
         };
 
-        instances.example-02 = {
+        instances.tutorial-06 = {
+          # region:serviceInstances
           # Backend: a plain echo-server. Named `backend` because the
           # gateway's package (see ./reverse-proxy-package.nix) takes an
           # arg called `backend` — Kix matches the two up by name.
@@ -68,11 +71,12 @@ kix.buildCluster {
           #
           #   gateway = {
           #     package = reverseProxyPackage;
-          #     deps.backend = ref.example-02.backend;
+          #     deps.backend = ref.tutorial-06.backend;
           #   };
           gateway = {
             package = reverseProxyPackage;
           };
+          # endregion:serviceInstances
         };
       }
     )

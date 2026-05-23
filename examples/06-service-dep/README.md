@@ -1,6 +1,6 @@
-# 02 — Service dep
+# 06 — First local package and service-to-service dependency
 
-> **Recommended reading:** [01-hello-world](../01-hello-world/).
+> **Recommended reading:** [02-hello-world](../02-hello-world/).
 > This example assumes you know where `instances` live in `cluster.nix`.
 
 This cluster has **one service talking to another**: an nginx gateway
@@ -23,7 +23,7 @@ reverse-proxy-package.nix  # local package: nginx reverse-proxy
 The file name describes the *package*: a reverse-proxy. The cluster
 instantiates that package as an *instance* named `gateway`. Kix keeps
 those concepts separate because one package can back many instances;
-`05-multi-instance` shows that directly. kixpkgs follows the same
+`10-reuse-packages` shows that directly. kixpkgs follows the same
 naming convention for package files such as `echo-server` and
 `secret-echo`.
 
@@ -54,8 +54,8 @@ information to apply the backend before the gateway.
 
 ```sh
 # kind cluster assumed up — see the top-level README if not
-kix deploy 02-service-dep -y
-kix pf 02-service-dep gateway 8080:80    # blocks; Ctrl-C to stop
+kix deploy 06-service-dep -y
+kix pf 06-service-dep gateway 8080:80    # blocks; Ctrl-C to stop
 ```
 
 ```sh
@@ -69,7 +69,7 @@ LoadBalancer.
 
 ## Things to try
 
-- **See the wiring:** `kix build 02-service-dep` prints the YAML. Look
+- **See the wiring:** `kix build 06-service-dep` prints the YAML. Look
   at the gateway's ConfigMap — the `proxy_pass` URL has the real FQDN
   baked in. Note the `kix.dev/depends-on` annotation pointing at the
   backend.
@@ -78,11 +78,12 @@ LoadBalancer.
   the build. Add `aliases = [ "backend" ]` on `api` to restore the
   link. Aliases let an instance have a concrete name, such as `api`,
   while still filling a role name, such as `backend`.
-- **Inspect the dep graph:** `kix inspect 02-service-dep`.
-- **Hit the backend directly:** `kix pf 02-service-dep backend 8081:80`.
+- **Inspect the dep graph:** `kix inspect 06-service-dep`.
+- **Hit the backend directly:** `kix pf 06-service-dep backend 8081:80`.
 
 ## Next
 
-Move on to [`03-cross-namespace`](../03-cross-namespace/), which puts
-the backend and gateway in separate namespaces and writes the dep out
-explicitly with `ref`.
+Move on to
+[`08-namespace-deps`](../08-namespace-deps/),
+which puts the backend and gateway in separate namespaces and writes the dep
+out explicitly with `ref`.

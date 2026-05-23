@@ -1,11 +1,12 @@
-# 03 — Cross-namespace dep
+# 08 — Basic dependency resolution and namespace boundaries
 
-> **Recommended reading:** [02-service-dep](../02-service-dep/).
+> **Recommended reading:** [06-service-dep](../06-service-dep/).
 > This example assumes you know how a package asks for `backend`.
 
-Same gateway-and-backend shape as `02-service-dep`, but the two
-instances now live in **different namespaces**: the backend in
-`platform`, the gateway in `app`.
+Same gateway-and-backend shape as
+`06-service-dep`, but the two
+instances now live in **different namespaces**: the backend in `platform`, the
+gateway in `app`.
 
 **You'll learn:** how to wire a dep across a namespace boundary with
 `ref.<ns>.<inst>`, and why explicit wiring is clearer at namespace
@@ -15,12 +16,12 @@ boundaries.
 
 ```
 cluster.nix                # two namespaces, two instances, explicit ref
-reverse-proxy-package.nix  # same package as in 02 (copy)
+reverse-proxy-package.nix  # same package as in 06 (copy)
 ```
 
 The reverse-proxy package is a verbatim copy of the one in
-`02-service-dep` — kept local so each example folder reads in
-isolation.
+`06-service-dep` — kept local so each
+example folder reads in isolation.
 
 ## Instances
 
@@ -31,8 +32,9 @@ isolation.
 
 ## How the wiring works
 
-The reverse-proxy package is the same shape as in `02-service-dep`: its
-`build` function declares a `backend` dep.
+The reverse-proxy package is the same shape as in
+`06-service-dep`: its `build`
+function declares a `backend` dep.
 
 The difference is in `cluster.nix`. Look at `instances.app.gateway`:
 the gateway lives in `app`, while the backend lives in `platform`, so
@@ -62,8 +64,8 @@ for a discussion on making cross-namespace resolution opt-in.
 
 ```sh
 # kind cluster assumed up — see the top-level README if not
-kix deploy 03-cross-namespace -y
-kix pf 03-cross-namespace gateway 8080:80    # blocks; Ctrl-C to stop
+kix deploy 08-namespace-deps -y
+kix pf 08-namespace-deps gateway 8080:80    # blocks; Ctrl-C to stop
 ```
 
 ```sh
@@ -76,15 +78,15 @@ The gateway in `app` is proxying to the backend in `platform`.
 ## Things to try
 
 - **Drop the `deps` line.** Comment it out and re-run
-  `kix deploy 03-cross-namespace -y`. It still works — that's the
+  `kix deploy 08-namespace-deps -y`. It still works — that's the
   cluster-wide fallback. The explicit line is there to make the
   boundary crossing obvious.
 - **Cause a collision.** Add a second `backend` instance in a new
   namespace and watch what happens.
-- **Inspect the dep graph:** `kix inspect 03-cross-namespace`.
-- **Hit the backend directly:** `kix pf 03-cross-namespace backend 8081:80`.
+- **Inspect the dep graph:** `kix inspect 08-namespace-deps`.
+- **Hit the backend directly:** `kix pf 08-namespace-deps backend 8081:80`.
 
 ## Next
 
-Move on to [`04-typed-options`](../04-typed-options/), which gives the
-reverse-proxy package typed config options validated at build time.
+Move on to [`09-typed-options`](../09-typed-options/), which
+gives the reverse-proxy package typed config options validated at build time.

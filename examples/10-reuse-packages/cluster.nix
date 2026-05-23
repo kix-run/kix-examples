@@ -1,8 +1,8 @@
-# 05-multi-instance — one package, many instances.
+# 10-reuse-packages — one package, many instances.
 #
-# Recommended reading: 04-typed-options (the reverse-proxy package
+# Recommended reading: 09-typed-options (the reverse-proxy package
 # here is a direct copy, including its `options`), and earlier
-# examples (02, 03).
+# examples (06, 08).
 #
 # What's new: the packages themselves do not change. Instead, the same
 # echo-server package and reverse-proxy package are instantiated twice
@@ -15,7 +15,7 @@ let
   reverseProxyPackage = import ./reverse-proxy-package.nix;
 in
 kix.buildCluster {
-  name = "05-multi-instance";
+  name = "10-reuse-packages";
 
   modules = [
     kix.flavors.kind

@@ -5,7 +5,7 @@ clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
 
 Each example has its own folder under `examples/`, with a `cluster.nix`
 and a focused `README.md`. They are numbered in order of increasing
-complexity. Start at `01-hello-world` and walk forward.
+complexity. Start at `02-hello-world` and walk forward.
 
 > [!NOTE]
 > While `adamcharnock/kixpkgs` is private, `flake.nix` points at a local
@@ -36,10 +36,10 @@ workload:
 kind create cluster --config kind-config.yaml
 
 # 2. Build and apply
-kix deploy 01-hello-world -y
+kix deploy 02-hello-world -y
 
 # 3. Port-forward in this terminal (Ctrl-C to stop)
-kix pf 01-hello-world hello-world 8080:80
+kix pf 02-hello-world hello-world 8080:80
 ```
 
 Then in another terminal:
@@ -54,8 +54,8 @@ Each example uses its own namespace(s) so they coexist on the same
 kind cluster:
 
 ```sh
-kix deploy 02-service-dep -y
-kix pf 02-service-dep gateway 8080:80
+kix deploy 06-service-dep -y
+kix pf 06-service-dep gateway 8080:80
 ```
 
 ## Glossary
@@ -90,7 +90,7 @@ you will see in the examples.
   `manifest`, `package`, `namespace`, or `cluster` level and have
   `info` / `warning` / `error` severity. Error findings at the first
   three levels fail the build; all findings land in
-  `result/kix-scorecard.json`. Example 06 uses this.
+  `result/kix-scorecard.json`. Tutorial 19 uses this.
 
 **Nix language** — everything you'll meet in these examples:
 
@@ -134,17 +134,17 @@ you will see in the examples.
   (`lib.concatLists`, `lib.filterAttrs`, `lib.types`, `lib.mkOption`).
 - **`lib.mkOption { type = ...; default = ...; }`** — declares a typed
   config knob in a Kix package (or any NixOS module). Used in
-  example 04.
+  tutorial 09.
 
 ## Other useful kix commands
 
 ```sh
 kix list clusters                       # what's defined in flake.nix
-kix list packages --cluster 02-service-dep
-kix status 02-service-dep               # resource health table
-kix diff 02-service-dep                 # what would change
-kix inspect 02-service-dep              # DI deps, parts, out
-kix rollback 02-service-dep             # roll back to previous activation
+kix list packages --cluster 06-service-dep
+kix status 06-service-dep               # resource health table
+kix diff 06-service-dep                 # what would change
+kix inspect 06-service-dep              # DI deps, parts, out
+kix rollback 06-service-dep             # roll back to previous activation
 ```
 
 ## Cleanup
@@ -159,10 +159,10 @@ kind delete cluster --name kix-demo
 flake.nix                   # mkFlake exposing every example as cluster-<name>
 kind-config.yaml            # kind cluster config (single control-plane node)
 examples/
-  01-hello-world/           # README + cluster.nix
-  02-service-dep/           # README + cluster.nix + reverse-proxy-package.nix
-  03-cross-namespace/       # README + cluster.nix + reverse-proxy-package.nix
-  04-typed-options/         # README + cluster.nix + reverse-proxy-package.nix
-  05-multi-instance/        # README + cluster.nix + reverse-proxy-package.nix
-  06-scorecards/            # README + cluster.nix + scorecard.nix + reverse-proxy-package.nix
+  02-hello-world/           # README + cluster.nix
+  06-service-dep/           # README + cluster.nix + reverse-proxy-package.nix
+  08-namespace-deps/        # README + cluster.nix + reverse-proxy-package.nix
+  09-typed-options/         # README + cluster.nix + reverse-proxy-package.nix
+  10-reuse-packages/        # README + cluster.nix + reverse-proxy-package.nix
+  19-scorecards/            # README + cluster.nix + scorecard.nix + reverse-proxy-package.nix
 ```

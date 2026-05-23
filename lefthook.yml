@@ -15,7 +15,7 @@ pre-commit:
       # Build failures catch Nix syntax, type errors, and manifest /
       # package / namespace-level scorecard errors. The jq pass on
       # the JSON catches cluster-level errors, which don't natively
-      # fail nix build (see examples/06-scorecards/README.md).
+      # fail nix build (see examples/19-scorecards/README.md).
       run: |
         set -eu
         FAIL=0

@@ -1,4 +1,4 @@
-# 01 — Hello world
+# 02 — Hello world
 
 > **New to Nix?** The [glossary in the root README](../../README.md#glossary)
 > defines every Nix construct used in these examples (attrsets, `let`,
@@ -13,7 +13,7 @@ namespace.
 
 ## What's in it
 
-Open `cluster.nix` and look at `instances.example-01`. There is one
+Open `cluster.nix` and look at `instances.tutorial-02`. There is one
 instance named `hello-world`, backed by the `packages.echo-server`
 package from kixpkgs.
 
@@ -26,8 +26,8 @@ message, deploy again, and curl the service.
 From the repo root, with the kind cluster already running:
 
 ```sh
-kix deploy 01-hello-world -y
-kix pf 01-hello-world hello-world 8080:80    # blocks; Ctrl-C to stop
+kix deploy 02-hello-world -y
+kix pf 02-hello-world hello-world 8080:80    # blocks; Ctrl-C to stop
 ```
 
 Then in another terminal:
@@ -40,15 +40,15 @@ curl http://localhost:8080/
 ## Things to try
 
 - **Change the message** in `cluster.nix`, then re-run
-  `kix deploy 01-hello-world -y`. Reload `http://localhost:8080` — the
+  `kix deploy 02-hello-world -y`. Reload `http://localhost:8080` — the
   new value appears.
-- **See the rendered manifests:** `kix build 01-hello-world` prints
+- **See the rendered manifests:** `kix build 02-hello-world` prints
   the YAML Kix would apply.
-- **Diff against the live cluster:** `kix diff 01-hello-world`.
-- **Inspect the cluster's DI graph:** `kix inspect 01-hello-world`.
+- **Diff against the live cluster:** `kix diff 02-hello-world`.
+- **Inspect the cluster's DI graph:** `kix inspect 02-hello-world`.
 
 ## Next
 
-Once this works, move on to [`02-service-dep`](../02-service-dep/).
-It adds a second service and shows how Kix wires one workload to
-another.
+Once this works, move on to
+[`06-service-dep`](../06-service-dep/).
+It adds a second service and shows how Kix wires one workload to another.

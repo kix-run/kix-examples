@@ -1,7 +1,7 @@
-# 04-typed-options — typed package config via `lib.mkOption`.
+# 09-typed-options — typed package config via `lib.mkOption`.
 #
-# Recommended reading: 02-service-dep (packages + deps),
-# 03-cross-namespace (`ref`). This file assumes you know what
+# Recommended reading: 06-service-dep (packages + deps),
+# 08-namespace-deps (`ref`). This file assumes you know what
 # `package`, `config`, `deps`, and `ref` mean.
 #
 # What's new: the gateway's `config` block now has typed knobs
@@ -15,7 +15,7 @@ let
   reverseProxyPackage = import ./reverse-proxy-package.nix;
 in
 kix.buildCluster {
-  name = "04-typed-options";
+  name = "09-typed-options";
 
   modules = [
     kix.flavors.kind
@@ -24,10 +24,10 @@ kix.buildCluster {
       { ref, ... }:
       {
         namespaces = {
-          example-04 = { };
+          tutorial-09 = { };
         };
 
-        instances.example-04 = {
+        instances.tutorial-09 = {
           backend = {
             package = packages.echo-server;
             config = {
@@ -47,7 +47,7 @@ kix.buildCluster {
               maxBodySize = "10m";
             };
 
-            deps.backend = ref.example-04.backend;
+            deps.backend = ref.tutorial-09.backend;
           };
         };
       }

@@ -1,3 +1,4 @@
+# region:exampleFlake
 {
   description = "Kix example clusters — a tour of Kix patterns runnable on kind.";
 
@@ -18,12 +19,13 @@
     inputs.kixpkgs.lib.mkFlake {
       inherit inputs;
       clusters = {
-        "01-hello-world" = ./examples/01-hello-world/cluster.nix;
-        "02-service-dep" = ./examples/02-service-dep/cluster.nix;
-        "03-cross-namespace" = ./examples/03-cross-namespace/cluster.nix;
-        "04-typed-options" = ./examples/04-typed-options/cluster.nix;
-        "05-multi-instance" = ./examples/05-multi-instance/cluster.nix;
-        "06-scorecards" = ./examples/06-scorecards/cluster.nix;
+        "02-hello-world" = ./examples/02-hello-world/cluster.nix;
+        "06-service-dep" = ./examples/06-service-dep/cluster.nix;
+        "08-namespace-deps" = ./examples/08-namespace-deps/cluster.nix;
+        "09-typed-options" = ./examples/09-typed-options/cluster.nix;
+        "10-reuse-packages" = ./examples/10-reuse-packages/cluster.nix;
+        "19-scorecards" = ./examples/19-scorecards/cluster.nix;
       };
     };
 }
+# endregion:exampleFlake

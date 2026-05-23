@@ -5,8 +5,8 @@
 # imported by cluster.nix and instantiated there as an `instance` named
 # `gateway`. Real packages in kixpkgs use the same shape.
 #
-# Unchanged from 02-service-dep. See that example for the package
-# walkthrough; 03's new idea is the explicit cross-namespace `ref` in
+# Unchanged from 06-service-dep. See that example for the package
+# walkthrough; 08's new idea is the explicit cross-namespace `ref` in
 # cluster.nix.
 
 {

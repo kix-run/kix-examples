@@ -1,8 +1,9 @@
-# 04 — Typed package options
+# 09 — Typed package options
 
-> **Recommended reading:** [02-service-dep](../02-service-dep/),
-> [03-cross-namespace](../03-cross-namespace/). This example assumes
-> you know what `package`, `config`, `deps`, and `ref` mean.
+> **Recommended reading:** [06-service-dep](../06-service-dep/),
+> [08-namespace-deps](../08-namespace-deps/).
+> This example assumes you know what `package`, `config`, `deps`, and `ref`
+> mean.
 
 The reverse-proxy package now declares typed configuration **options**.
 The cluster passes values in; the package validates them at build
@@ -33,13 +34,13 @@ examples, and types become part of the package's config contract.
 
 ## Supplying values from the cluster
 
-Open `cluster.nix` and look at `instances.example-04.gateway`. Its
+Open `cluster.nix` and look at `instances.tutorial-09.gateway`. Its
 `config` attrset supplies values for those package options, and
 `deps.backend` still points the gateway at the backend instance.
 
 Inside the package's `build` function, those values arrive as
 `config.proxyPath` and `config.maxBodySize`. It is the same `config`
-argument you saw in `01-hello-world`; the difference is that the
+argument you saw in `02-hello-world`; the difference is that the
 package now declares what values are valid.
 
 ## Why types here matter
@@ -60,8 +61,8 @@ at `nix build` time, before any pod runs.
 
 ```sh
 # kind cluster assumed up — see the top-level README if not
-kix deploy 04-typed-options -y
-kix pf 04-typed-options gateway 8080:80    # blocks; Ctrl-C to stop
+kix deploy 09-typed-options -y
+kix pf 09-typed-options gateway 8080:80    # blocks; Ctrl-C to stop
 ```
 
 ```sh
@@ -72,13 +73,13 @@ curl http://localhost:8080/
 ## Things to try
 
 - **Break the path type:** set `proxyPath = "api";` (no slash) and run
-  `nix build .#cluster-04-typed-options`.
+  `nix build .#cluster-09-typed-options`.
 - **Break the body-size type:** set `maxBodySize = "1mb";` (wrong
   suffix).
-- **Use the type for documentation:** `kix inspect 04-typed-options`
+- **Use the type for documentation:** `kix inspect 09-typed-options`
   shows option descriptions and examples.
 
 ## Next
 
-Move on to [`05-multi-instance`](../05-multi-instance/), which uses
-the same package to run two gateways with different config.
+Move on to [`10-reuse-packages`](../10-reuse-packages/), which uses the
+same package to run two gateways with different config.

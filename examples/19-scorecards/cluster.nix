@@ -1,8 +1,8 @@
-# 06-scorecards — Kix's compile-time rule engine.
+# 19-scorecards — Kix's compile-time rule engine.
 #
-# Recommended reading: 05-multi-instance (the cluster body here is
-# identical to 05's — two namespaces, two backend+gateway pairs),
-# and earlier examples (02/03/04).
+# Recommended reading: 10-reuse-packages (the cluster body here is
+# identical to 10's — two namespaces, two backend+gateway pairs),
+# and earlier examples (06/08/09).
 #
 # What's new: the `scorecard = ...` line below. The cluster turns on
 # Kix's rule engine and imports rules from ./scorecard.nix. The
@@ -15,7 +15,7 @@ let
   reverseProxyPackage = import ./reverse-proxy-package.nix;
 in
 kix.buildCluster {
-  name = "06-scorecards";
+  name = "19-scorecards";
 
   modules = [
     kix.flavors.kind

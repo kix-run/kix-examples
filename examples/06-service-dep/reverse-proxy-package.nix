@@ -5,7 +5,7 @@
 # imported by cluster.nix and instantiated there as an `instance` named
 # `gateway`. Real packages in kixpkgs use the same shape.
 #
-# Recommended reading: 01-hello-world.
+# Recommended reading: 02-hello-world.
 #
 # What's new: `build` asks for a `backend` dep. Kix gives the package
 # the matched instance's `out` API, so the nginx config can point at
@@ -35,6 +35,7 @@
   #   backend — a *dep*. The cluster wires it to a specific instance
   #             (see cluster.nix). Inside the package it appears as an
   #             `out` API: `backend.out.fqdn`, `backend.out.port`, ...
+  # region:buildArgs
   build =
     {
       self,
@@ -43,6 +44,7 @@
       backend,
       ...
     }:
+  # endregion:buildArgs
     let
       # Convention: name resources after the instance they belong to.
       # Here `scope.instanceName` is "gateway" (set in cluster.nix).
@@ -64,6 +66,7 @@
       # it also carries Nix string context, which Kix uses to stamp a
       # `kix.dev/depends-on` annotation onto this ConfigMap — that's
       # how the deploy DAG learns the backend must be applied first.
+      # region:configmap
       configmap = scope.mkResource {
         apiVersion = "v1";
         kind = "ConfigMap";
@@ -81,6 +84,7 @@
           }
         '';
       };
+      # endregion:configmap
 
       # Deployment.
       #
@@ -169,6 +173,8 @@
       # instance through `<thisInstance>.out.<x>`. For a service-shaped
       # package the Service is the natural root, since that's what
       # other workloads talk to.
+      # region:root
       root = self.service;
+      # endregion:root
     };
 }

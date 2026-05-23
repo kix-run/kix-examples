@@ -1,10 +1,21 @@
 # reverse-proxy-package.nix — nginx reverse-proxy with typed options.
 #
-# Unchanged from 04-typed-options. See that example for the walkthrough
-# of the package shape (`meta` + `options` + `build`), the typed knobs
-# (`proxyPath`, `maxBodySize`), and what `lib` / `scope` / `kix` are.
-# 05 reuses it to show the same package backing multiple instances.
-# The new lesson is in `cluster.nix`, not here.
+# Recommended reading: 06-service-dep (which introduced the package
+# shape: attrset with `meta` + `build`, deps as named build args).
+#
+# What's new: this version is a *function* `{ scope, lib, kix }: { ... }`
+# so Kix can pass in helpers such as `lib`, and the package can declare
+# typed `options` with `lib.mkOption` / `lib.types`.
+#
+# Two new knobs vs 06/08:
+#
+#   proxyPath       — path the proxy forwards. The type forces it to
+#                     start with `/`, so `api` fails during the build
+#                     instead of becoming a bad nginx route.
+#
+#   maxBodySize     — nginx `client_max_body_size`. nginx's default is
+#                     1 MB, which is easy to forget until uploads start
+#                     failing. Making it explicit is cheap insurance.
 
 { scope, lib, kix }:
 
@@ -14,6 +25,12 @@
     description = "nginx reverse-proxy with typed config options";
   };
 
+  # `options` declares the package's config surface. Each option is
+  # built with `lib.mkOption` (a nixpkgs helper) and has a `type`, a
+  # `default`, a `description`, and optionally an `example`. Whatever
+  # the cluster passes in `config = { ... }` is checked against these
+  # types before any K8s manifest gets rendered.
+  # region:options
   options = {
     proxyPath = lib.mkOption {
       # `lib.types.strMatching` runs the regex at module-merge time;
@@ -36,6 +53,7 @@
       example = "10m";
     };
   };
+  # endregion:options
 
   build =
     {
@@ -89,14 +107,6 @@
                       port = 80;
                     };
                     periodSeconds = 5;
-                  };
-                  livenessProbe = {
-                    httpGet = {
-                      path = "/healthz";
-                      port = 80;
-                    };
-                    periodSeconds = 10;
-                    failureThreshold = 3;
                   };
                   volumeMounts = [
                     {

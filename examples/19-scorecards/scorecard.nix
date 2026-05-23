@@ -1,6 +1,6 @@
 # scorecard.nix — the rules wired into cluster.nix.
 #
-# Recommended reading: 05-multi-instance (`noProxyPathCollision`
+# Recommended reading: 10-reuse-packages (`noProxyPathCollision`
 # only makes sense when there's more than one proxy in the cluster).
 #
 # Three rules, each at a different scope:
@@ -28,7 +28,7 @@ let
     # Cluster-level rules inspect built instances, so the package
     # metadata is under `inst._meta.packageMeta`.
     builtins.elem "reverse-proxy" (inst._meta.packageMeta.provides or [ ]);
-  # endregion
+  # endregion:isProxy
 in
 {
   enable = true;
@@ -46,6 +46,7 @@ in
 
     # 2. Custom package-level rule. Runs once per instance, with
     #    access to that instance's resolved `config` and `resources`.
+    # region:packageRule
     custom.proxyMaxBodySizeMustBeExplicit = {
       description = "Reverse-proxy gateways must set maxBodySize explicitly (not the 1m default).";
       level = "package";
@@ -71,9 +72,11 @@ in
         else
           [ ];
     };
+    # endregion:packageRule
 
     # 3. Custom cluster-level rule. Sees `allInstances` across every
     #    namespace, so it can compare one instance with another.
+    # region:clusterRule
     custom.noProxyPathCollision = {
       description = "No two reverse-proxy gateways may share the same proxyPath.";
       level = "cluster";
@@ -125,5 +128,6 @@ in
             );
         }) (builtins.attrNames collisions);
     };
+    # endregion:clusterRule
   };
 }

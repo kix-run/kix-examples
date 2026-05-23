@@ -1,10 +1,10 @@
-# 06 — Scorecards
+# 19 — Scorecards and compile-time policy
 
-> **Recommended reading:** [05-multi-instance](../05-multi-instance/)
-> (the cluster body here is identical to 05's),
-> [02-service-dep](../02-service-dep/),
-> [03-cross-namespace](../03-cross-namespace/),
-> [04-typed-options](../04-typed-options/).
+> **Recommended reading:** [10-reuse-packages](../10-reuse-packages/)
+> (the cluster body here is identical to 10's),
+> [06-service-dep](../06-service-dep/),
+> [08-namespace-deps](../08-namespace-deps/),
+> [09-typed-options](../09-typed-options/).
 
 Kix has a compile-time rule engine called the **scorecard**. Rules
 run during `nix build` and can fire findings at four levels —
@@ -15,7 +15,7 @@ run during `nix build` and can fire findings at four levels —
 level errors land in `result/kix-scorecard.json` (see the note
 below). All findings appear in the JSON regardless.
 
-This example reuses the multi-instance shape from `05` so the
+This example reuses the multi-instance layout from `10` so the
 cluster-level rule has more than one gateway to inspect. The scorecard
 turns on three things: one built-in rule category, one package-level
 custom rule, and one cluster-level custom rule.
@@ -93,11 +93,11 @@ that compare instances need the cluster as input.
 
 ```sh
 # kind cluster assumed up — see the top-level README if not
-kix deploy 06-scorecards -y
+kix deploy 19-scorecards -y
 
-# As 05, two terminals.
-kix pf 06-scorecards -n app-v1 gateway 8081:80    # blocks
-kix pf 06-scorecards -n app-v2 gateway 8082:80    # other terminal
+# As in 10, two terminals.
+kix pf 19-scorecards -n app-v1 gateway 8081:80    # blocks
+kix pf 19-scorecards -n app-v2 gateway 8082:80    # other terminal
 ```
 
 ```sh

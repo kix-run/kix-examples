@@ -1,6 +1,6 @@
-# 01-hello-world — the smallest possible Kix cluster.
+# 02-hello-world — the smallest possible Kix cluster.
 #
-# One echo-server in an `example-01` namespace. No dependencies, no
+# One echo-server in a `tutorial-02` namespace. No dependencies, no
 # secrets, and no local packages yet. This is just enough to prove the
 # Kix loop works:
 #
@@ -17,12 +17,13 @@
 # Nix functions take their args as an attrset. This file is a function
 # that Kix calls with `kix` (the framework) and `packages` (the
 # package catalog from kixpkgs).
+# region:clusterFrame
 { kix, packages }:
 
 # `kix.buildCluster` builds a cluster spec from an attrset. The body
 # below is one big attrset literal.
 kix.buildCluster {
-  name = "01-hello-world";
+  name = "02-hello-world";
 
   # `modules` is a list (whitespace-separated, no commas).
   modules = [
@@ -35,14 +36,15 @@ kix.buildCluster {
       # Every namespace the cluster manages. `{ }` is an empty attrset
       # — we don't need any per-namespace config here.
       namespaces = {
-        example-01 = { };
+        tutorial-02 = { };
       };
 
       # `instances.<namespace> =` is the dotted-path shorthand for
       # creating a nested attrset.
       # Here we have an instance named `hello-world` in namespace
-      # `example-01`.
-      instances.example-01 = {
+      # `tutorial-02`.
+      instances.tutorial-02 = {
+        # region:helloWorldInstance
         hello-world = {
           # `packages.echo-server` ships in the public kixpkgs
           # repository, along with many others.
@@ -55,7 +57,9 @@ kix.buildCluster {
             message = "Hello from Kix!";
           };
         };
+        # endregion:helloWorldInstance
       };
     }
   ];
 }
+# endregion:clusterFrame
