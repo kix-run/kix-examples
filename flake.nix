@@ -19,12 +19,12 @@
     inputs.kixpkgs.lib.mkFlake {
       inherit inputs;
       clusters = {
-        "02-hello-world" = ./examples/02-hello-world/cluster.nix;
-        "06-service-dep" = ./examples/06-service-dep/cluster.nix;
-        "08-namespace-deps" = ./examples/08-namespace-deps/cluster.nix;
-        "09-typed-options" = ./examples/09-typed-options/cluster.nix;
-        "10-reuse-packages" = ./examples/10-reuse-packages/cluster.nix;
-        "19-scorecards" = ./examples/19-scorecards/cluster.nix;
+        "02-hello-world" = ./tutorials/02-hello-world/cluster.nix;
+        "06-service-dep" = ./tutorials/06-service-dep/cluster.nix;
+        "08-namespace-deps" = ./tutorials/08-namespace-deps/cluster.nix;
+        "09-typed-options" = ./tutorials/09-typed-options/cluster.nix;
+        "10-reuse-packages" = ./tutorials/10-reuse-packages/cluster.nix;
+        "19-scorecards" = ./tutorials/19-scorecards/cluster.nix;
       };
     };
 }

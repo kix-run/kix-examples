@@ -3,9 +3,18 @@
 A hands-on tour of [Kix](https://kixops.dev) patterns, using small
 clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
 
-Each example has its own folder under `examples/`, with a `cluster.nix`
+Each example has its own folder under `tutorials/`, with a `cluster.nix`
 and a focused `README.md`. They are numbered in order of increasing
 complexity. Start at `02-hello-world` and walk forward.
+
+The repo also contains two sibling directories:
+
+- `.hidden/` — finished versions of clusters that the docs site builds
+  command output against. These spoil tutorials that ask you to build
+  the cluster yourself, so they are dot-prefixed to stay out of casual
+  browsing. Look only when you want the reference answer.
+- `other/` — placeholder for examples that don't belong in the numbered
+  tutorial sequence.
 
 > [!NOTE]
 > While `adamcharnock/kixpkgs` is private, `flake.nix` points at a local
@@ -156,13 +165,20 @@ kind delete cluster --name kix-demo
 ## Layout
 
 ```
-flake.nix                   # mkFlake exposing every example as cluster-<name>
+flake.nix                   # mkFlake exposing every public example as cluster-<name>
 kind-config.yaml            # kind cluster config (single control-plane node)
-examples/
+tutorials/
+  README.md                 # pointer back to the docs tutorial index
   02-hello-world/           # README + cluster.nix
   06-service-dep/           # README + cluster.nix + reverse-proxy-package.nix
   08-namespace-deps/        # README + cluster.nix + reverse-proxy-package.nix
   09-typed-options/         # README + cluster.nix + reverse-proxy-package.nix
   10-reuse-packages/        # README + cluster.nix + reverse-proxy-package.nix
   19-scorecards/            # README + cluster.nix + scorecard.nix + reverse-proxy-package.nix
+.hidden/
+  README.md                 # spoiler warning
+  flake.nix                 # separate flake exposing the finished clusters
+  04-from-scratch/          # finished version of the tutorial-04 cluster
+other/
+  README.md                 # placeholder for non-tutorial examples
 ```
