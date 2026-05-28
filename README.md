@@ -7,14 +7,16 @@ Each example has its own folder under `tutorials/`, with a `cluster.nix`
 and a focused `README.md`. They are numbered in order of increasing
 complexity. Start at `02-hello-world` and walk forward.
 
-The repo also contains two sibling directories:
+The repo also contains a sibling directory:
 
-- `.hidden/` — finished versions of clusters that the docs site builds
-  command output against. These spoil tutorials that ask you to build
-  the cluster yourself, so they are dot-prefixed to stay out of casual
-  browsing. Look only when you want the reference answer.
 - `other/` — placeholder for examples that don't belong in the numbered
   tutorial sequence.
+
+Finished versions of "build it yourself" tutorial clusters (e.g.
+`04-from-scratch`) live in `kixpkgs/docs/overlays/` and are layered
+onto a writable workspace copy of this repo by the docs captures
+pipeline. They are deliberately not in this repo so the public
+`kix list clusters` doesn't reveal them.
 
 > [!NOTE]
 > While `adamcharnock/kixpkgs` is private, `flake.nix` points at a local
@@ -175,10 +177,6 @@ tutorials/
   09-typed-options/         # README + cluster.nix + reverse-proxy-package.nix
   10-reuse-packages/        # README + cluster.nix + reverse-proxy-package.nix
   19-scorecards/            # README + cluster.nix + scorecard.nix + reverse-proxy-package.nix
-.hidden/
-  README.md                 # spoiler warning
-  flake.nix                 # separate flake exposing the finished clusters
-  04-from-scratch/          # finished version of the tutorial-04 cluster
 other/
   README.md                 # placeholder for non-tutorial examples
 ```

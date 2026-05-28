@@ -9,7 +9,7 @@ pre-commit:
     check-clusters:
       # Only run when something that could affect a cluster build
       # changes. README-only commits skip the slow check.
-      glob: "{tutorials/**/*,.hidden/**/*,flake.nix,flake.lock}"
+      glob: "{tutorials/**/*,flake.nix,flake.lock}"
 
       # Build every cluster's activation and inspect the scorecard.
       # Build failures catch Nix syntax, type errors, and manifest /
