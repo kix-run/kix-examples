@@ -5,10 +5,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # TODO: switch to github:adamcharnock/kixpkgs once that repo is public.
-    # git+file: respects .gitignore so the 9 GB of build artifacts in the
-    # local kixpkgs tree don't get copied into the Nix store on every build.
-    kixpkgs.url = "git+file:///Users/adam/ghq/github.com/adamcharnock/kixpkgs";
+    # Fetched via the GitHub fetcher. While the repo is private, every
+    # consumer (local dev, kixpkgs CI, the captures pipeline) must
+    # provide a token: `gh auth token` plugged into nix.conf
+    # `access-tokens = github.com=...`, or the workflow's auto-issued
+    # GITHUB_TOKEN. The kixpkgs captures pipeline additionally passes
+    # `--override-input kixpkgs path:<store-path>` to avoid network
+    # access inside the Nix sandbox.
+    kixpkgs.url = "github:adamcharnock/kixpkgs";
     kixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
 

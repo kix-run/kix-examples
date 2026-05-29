@@ -19,11 +19,15 @@ pipeline. They are deliberately not in this repo so the public
 `kix list clusters` doesn't reveal them.
 
 > [!NOTE]
-> While `adamcharnock/kixpkgs` is private, `flake.nix` points at a local
-> filesystem path (`git+file:///Users/adam/ghq/github.com/adamcharnock/kixpkgs`).
-> To share this repo with someone else, make `kixpkgs` public and switch
-> the input to `github:adamcharnock/kixpkgs`, or have them clone
-> `kixpkgs` locally and edit the path.
+> `adamcharnock/kixpkgs` is private. `flake.nix` fetches it via the
+> GitHub fetcher, so any consumer must provide a token. Locally, plug
+> `gh auth token` into `~/.config/nix/nix.conf`:
+>
+> ```
+> access-tokens = github.com=ghp_…
+> ```
+>
+> CI in `kixpkgs` uses its auto-issued `GITHUB_TOKEN`.
 
 ## Prerequisites
 

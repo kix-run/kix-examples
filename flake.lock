@@ -23,17 +23,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1779367372,
-        "narHash": "sha256-mLT5JG9HfBdL0DpvLSdueqeOjrOcF5+AE3cTCHKUTaM=",
-        "ref": "refs/heads/main",
-        "rev": "d9d68ce3c838ecba65d7036f1b4ac13a457fd2d8",
-        "revCount": 378,
-        "type": "git",
-        "url": "file:///Users/adam/ghq/github.com/adamcharnock/kixpkgs"
+        "lastModified": 1780036041,
+        "narHash": "sha256-OrEgd11s09gUbx0+yXcVLyd7abStxLMmsaFcGwLLMuI=",
+        "owner": "adamcharnock",
+        "repo": "kixpkgs",
+        "rev": "6cdd93098a0c27e899e3f66531db6e820cf0507e",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///Users/adam/ghq/github.com/adamcharnock/kixpkgs"
+        "owner": "adamcharnock",
+        "repo": "kixpkgs",
+        "type": "github"
       }
     },
     "nixpkgs": {
