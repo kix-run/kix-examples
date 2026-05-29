@@ -9,9 +9,11 @@
     # consumer (local dev, kixpkgs CI, the captures pipeline) must
     # provide a token: `gh auth token` plugged into nix.conf
     # `access-tokens = github.com=...`, or the workflow's auto-issued
-    # GITHUB_TOKEN. The kixpkgs captures pipeline additionally passes
-    # `--override-input kixpkgs path:<store-path>` to avoid network
-    # access inside the Nix sandbox.
+    # GITHUB_TOKEN. The kixpkgs captures pipeline rewrites this URL
+    # to `path:<store>` and drops flake.lock before invoking kix, so
+    # its sandboxed eval never hits the network. (kix's clap CLI
+    # doesn't forward `--override-input`, so the rewrite is the only
+    # in-band knob.)
     kixpkgs.url = "github:adamcharnock/kixpkgs";
     kixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
