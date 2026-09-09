@@ -20,6 +20,7 @@
 
   # Each example folder has its own cluster.nix. Add a new example by
   # appending a line here and creating examples/NN-name/cluster.nix.
+  # region:mkFlakeOutputs
   outputs =
     inputs:
     inputs.kixpkgs.lib.mkFlake {
@@ -31,7 +32,9 @@
         "09-typed-options" = ./tutorials/09-typed-options/cluster.nix;
         "10-reuse-packages" = ./tutorials/10-reuse-packages/cluster.nix;
         "19-scorecards" = ./tutorials/19-scorecards/cluster.nix;
+        "how-to-application" = ./how-to/application/cluster.nix;
       };
     };
+  # endregion:mkFlakeOutputs
 }
 # endregion:exampleFlake

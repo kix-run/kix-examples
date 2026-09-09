@@ -11,6 +11,7 @@ The repo also contains a sibling directory:
 
 - `other/` — placeholder for examples that don't belong in the numbered
   tutorial sequence.
+- `how-to/` — reusable runnable scenarios shared by related how-to guides.
 
 Finished versions of "build it yourself" tutorial clusters (e.g.
 `04-from-scratch`) live in `kixpkgs/docs/overlays/` and are layered
@@ -181,6 +182,8 @@ tutorials/
   09-typed-options/         # README + cluster.nix + reverse-proxy-package.nix
   10-reuse-packages/        # README + cluster.nix + reverse-proxy-package.nix
   19-scorecards/            # README + cluster.nix + scorecard.nix + reverse-proxy-package.nix
+how-to/
+  application/              # local package authoring and basic operations
 other/
   README.md                 # placeholder for non-tutorial examples
 ```

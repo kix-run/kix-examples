@@ -14,12 +14,6 @@
 # That's the same `ref` introduced in 06. Here we use it to point at
 # one exact instance outside the gateway's namespace.
 #
-# Kix currently has an other-namespace fallback resolver, so this would
-# still work without `deps.backend`. This example writes the dependency
-# anyway because namespace boundaries are easier to review when they are
-# visible at the call site. See kixpkgs issue #19 for the discussion on
-# making cross-namespace resolution opt-in.
-#
 # Recommended reading: 06-service-dep.
 #
 # What's new: `deps.backend = ref.platform.backend`, which wires a dep
@@ -63,10 +57,8 @@ kix.buildCluster {
           # region:crossNamespaceDep
           gateway = {
             package = reverseProxyPackage;
-            # Explicit cross-namespace wiring. Without this line,
-            # Kix's resolver would still find `backend` in `platform`
-            # (the cluster-wide fallback), but writing it out makes
-            # the boundary crossing visible at the call site.
+            # Explicit cross-namespace wiring keeps the boundary
+            # crossing visible at the call site.
             deps.backend = ref.platform.backend;
           };
           # endregion:crossNamespaceDep

@@ -1,7 +1,8 @@
 # kix-examples
 
-A series of numbered example clusters teaching Kix patterns. Each
-example builds on the previous one.
+Runnable examples used by the Kix tutorials and how-to guides. Numbered
+clusters under `tutorials/` form a learning sequence. Scenarios under
+`how-to/` are independent fixtures shared by related task guides.
 
 ## Audience
 
@@ -21,19 +22,19 @@ That doesn't mean every example is a Nix tutorial — but:
 
 ## Authoring rules
 
-- **Concepts in examples must be supported by prior examples.** Don't
+- **Tutorial concepts must be supported by prior tutorials.** Don't
   reference `deps`, `ref`, `aliases`, etc. before an earlier example has
   introduced them. A reader walking the examples in order should never hit a
   term they haven't seen before.
 
-- **Every example must declare its prerequisites in both the code and
+- **Every tutorial must declare its prerequisites in both the code and
   the README.** Engineers often skip READMEs, so the code header
   comment must include a `Recommended reading:` line naming the
   specific examples that introduced the concepts in use. The README
   mirrors it as a `> Recommended reading: [...](../NN-name/)` callout
   under the title.
 
-- **Every example must declare what's new.** Code header includes a
+- **Every tutorial must declare what's new.** Code header includes a
   `What's new:` line explaining the brick this example adds on top of
   prior examples. Keeps the per-example focus tight.
 
@@ -62,3 +63,32 @@ That doesn't mean every example is a Nix tutorial — but:
   at the top — point the reader back rather than restating the
   walkthrough. Saves cognitive load and keeps each example focused
   on its actual new brick.
+
+## How-to scenarios
+
+How-to scenarios provide executable source and command output for several
+related documentation pages.
+
+- Put scenarios under `how-to/<scenario>/` and register their clusters in the
+  root flake. Use stable descriptive cluster names such as
+  `how-to-application`.
+- Design a scenario around one coherent concern. Reuse it across guides, but
+  split out package stacks or platform components that would make the ordinary
+  scenario slow or difficult to run.
+- Give every cluster a unique namespace so live documentation captures can
+  share one kind cluster.
+- Keep the checked-in scenario valid and deployable. Broken values, simulated
+  drift, and failing probes belong in the documentation capture manifest as
+  temporary mutations.
+- Wrap substantial reusable fragments in named `# region:NAME` and
+  `# endregion:NAME` markers. Names describe the concept, not a docs page.
+  Regions in `.nix`, `.sh`, and `.py` files are extracted by the docs build.
+- Keep source regions short enough to explain in one place. Prefer several
+  focused regions over one region containing a complete large cluster.
+- Verify every affected cluster against the current Kix source before updating
+  the docs input lock. At minimum, build the cluster manifests. Run live
+  captures when the documented behavior depends on Kubernetes.
+- Coordinate changes with `kixpkgs/docs/how-to-coverage.json`. A documentation
+  change may use a local input override while both repositories are under
+  development, but the final docs lock must point to a published revision that
+  contains the scenario.
