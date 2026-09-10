@@ -37,6 +37,7 @@
         "how-to-composition" = ./how-to/composition/cluster.nix;
         "how-to-fragments" = ./how-to/composition/fragments-cluster.nix;
         "how-to-multi-env" = ./how-to/composition/multi-env-cluster.nix;
+        "how-to-package-storage" = ./how-to/package-stacks/storage-cluster.nix;
         "how-to-platform-gateway" = ./how-to/platform/gateway-cluster.nix;
         "how-to-platform-hostpath" = ./how-to/platform/hostpath-cluster.nix;
         "how-to-platform-ingress" = ./how-to/platform/ingress-cluster.nix;
