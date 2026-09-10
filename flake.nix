@@ -37,6 +37,7 @@
         "how-to-composition" = ./how-to/composition/cluster.nix;
         "how-to-fragments" = ./how-to/composition/fragments-cluster.nix;
         "how-to-multi-env" = ./how-to/composition/multi-env-cluster.nix;
+        "how-to-platform-secrets" = ./how-to/platform/secrets-cluster.nix;
       };
     };
   # endregion:mkFlakeOutputs
