@@ -33,6 +33,7 @@
         "10-reuse-packages" = ./tutorials/10-reuse-packages/cluster.nix;
         "19-scorecards" = ./tutorials/19-scorecards/cluster.nix;
         "how-to-application" = ./how-to/application/cluster.nix;
+        "how-to-auto-instantiation" = ./how-to/auto-instantiation/cluster.nix;
         "how-to-composition" = ./how-to/composition/cluster.nix;
       };
     };
