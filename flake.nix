@@ -39,6 +39,7 @@
         "how-to-multi-env" = ./how-to/composition/multi-env-cluster.nix;
         "how-to-platform-gateway" = ./how-to/platform/gateway-cluster.nix;
         "how-to-platform-ingress" = ./how-to/platform/ingress-cluster.nix;
+        "how-to-platform-monitoring" = ./how-to/platform/monitoring-cluster.nix;
         "how-to-platform-secrets" = ./how-to/platform/secrets-cluster.nix;
       };
     };
