@@ -4,6 +4,7 @@
 
 let
   clientPackage = import ./client-package.nix;
+  webPackage = import ../application/web-package.nix;
 in
 kix.buildCluster {
   name = "how-to-adoption";
@@ -33,6 +34,20 @@ kix.buildCluster {
         };
 
         apps.client.package = clientPackage;
+
+        # region:preserveExistingSelectors
+        apps.legacy-web = {
+          package = webPackage;
+          selectorLabels = {
+            app = "legacy-web";
+            tier = "frontend";
+          };
+          config = {
+            message = "Kix now manages this workload";
+            environment = "production";
+          };
+        };
+        # endregion:preserveExistingSelectors
       };
     }
   ];
