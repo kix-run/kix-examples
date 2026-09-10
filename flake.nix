@@ -35,6 +35,8 @@
         "how-to-application" = ./how-to/application/cluster.nix;
         "how-to-auto-instantiation" = ./how-to/auto-instantiation/cluster.nix;
         "how-to-composition" = ./how-to/composition/cluster.nix;
+        "how-to-fragments" = ./how-to/composition/fragments-cluster.nix;
+        "how-to-multi-env" = ./how-to/composition/multi-env-cluster.nix;
       };
     };
   # endregion:mkFlakeOutputs
