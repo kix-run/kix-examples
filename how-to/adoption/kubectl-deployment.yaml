@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: legacy-web
+  namespace: takeover
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: legacy-web
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: legacy-web
+        tier: frontend
+    spec:
+      containers:
+        - name: nginx
+          image: docker.io/library/nginx:1.27-alpine
+          ports:
+            - name: http
+              containerPort: 80
