@@ -46,6 +46,7 @@
         "how-to-package-cert-manager" = ./how-to/package-stacks/cert-manager-cluster.nix;
         "how-to-package-cilium" = ./how-to/package-stacks/cilium-cluster.nix;
         "how-to-package-valkey" = ./how-to/package-stacks/valkey-cluster.nix;
+        "how-to-package-victoria-metrics" = ./how-to/package-stacks/victoria-metrics-cluster.nix;
         "how-to-platform-gateway" = ./how-to/platform/gateway-cluster.nix;
         "how-to-platform-hostpath" = ./how-to/platform/hostpath-cluster.nix;
         "how-to-platform-ingress" = ./how-to/platform/ingress-cluster.nix;
