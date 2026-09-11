@@ -41,6 +41,7 @@
         "how-to-package-storage" = ./how-to/package-stacks/storage-cluster.nix;
         "how-to-package-python" = ./how-to/package-stacks/python-cluster.nix;
         "how-to-package-monitoring" = ./how-to/package-stacks/monitoring-cluster.nix;
+        "how-to-package-cert-manager" = ./how-to/package-stacks/cert-manager-cluster.nix;
         "how-to-package-valkey" = ./how-to/package-stacks/valkey-cluster.nix;
         "how-to-platform-gateway" = ./how-to/platform/gateway-cluster.nix;
         "how-to-platform-hostpath" = ./how-to/platform/hostpath-cluster.nix;
