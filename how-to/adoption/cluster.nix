@@ -21,6 +21,7 @@ kix.buildCluster {
         };
 
         instances = {
+          # region:explicitImportOrdering
           legacy.legacy-api = {
             # region:importExistingService
             package = kix.mkImport {
@@ -35,12 +36,11 @@ kix.buildCluster {
             aliases = [ "legacyApi" ];
             # endregion:importExistingService
 
-            # region:explicitImportOrdering
             extraDeps = [ ref.apps.legacy-api-contract.root ];
-            # endregion:explicitImportOrdering
           };
 
           apps.legacy-api-contract.package = contractPackage;
+          # endregion:explicitImportOrdering
 
           apps.client = {
             package = clientPackage;
