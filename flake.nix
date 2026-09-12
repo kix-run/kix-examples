@@ -56,6 +56,7 @@
         "how-to-platform-network-policy" = ./how-to/platform/network-policy-cluster.nix;
         "how-to-platform-secrets" = ./how-to/platform/secrets-cluster.nix;
         "how-to-platform-sops" = ./how-to/platform/sops-secrets-cluster.nix;
+        "how-to-platform-cloudflare-tunnel" = ./how-to/platform/cloudflare-tunnel-cluster.nix;
       };
     };
   # endregion:mkFlakeOutputs
