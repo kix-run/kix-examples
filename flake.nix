@@ -55,6 +55,7 @@
         "how-to-platform-monitoring" = ./how-to/platform/monitoring-cluster.nix;
         "how-to-platform-network-policy" = ./how-to/platform/network-policy-cluster.nix;
         "how-to-platform-secrets" = ./how-to/platform/secrets-cluster.nix;
+        "how-to-platform-sops" = ./how-to/platform/sops-secrets-cluster.nix;
       };
     };
   # endregion:mkFlakeOutputs
