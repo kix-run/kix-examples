@@ -34,8 +34,7 @@
         "19-scorecards" = ./tutorials/19-scorecards/cluster.nix;
         "how-to-application" = ./how-to/application/cluster.nix;
         "how-to-adoption" = ./how-to/adoption/cluster.nix;
-        "how-to-stateful-before" = ./how-to/adoption/stateful-before-cluster.nix;
-        "how-to-stateful-after" = ./how-to/adoption/stateful-after-cluster.nix;
+        "how-to-stateful-migration" = ./how-to/adoption/stateful-before-cluster.nix;
         "how-to-adoption-takeover" = ./how-to/adoption/takeover-cluster.nix;
         "how-to-helm-bridge" = ./how-to/adoption/helm-bridge-cluster.nix;
         "how-to-auto-instantiation" = ./how-to/auto-instantiation/cluster.nix;

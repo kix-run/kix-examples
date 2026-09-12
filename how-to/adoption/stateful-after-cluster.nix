@@ -6,7 +6,7 @@ let
   statefulVolume = import ./stateful-volume-package.nix;
 in
 kix.buildCluster {
-  name = "how-to-stateful-after";
+  name = "how-to-stateful-migration";
 
   modules = [
     kix.flavors.kind
