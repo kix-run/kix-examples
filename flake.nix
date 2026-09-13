@@ -45,7 +45,6 @@
         "how-to-package-python" = ./how-to/package-stacks/python-cluster.nix;
         "how-to-package-stackgres" = ./how-to/package-stacks/stackgres-cluster.nix;
         "how-to-package-monitoring" = ./how-to/package-stacks/monitoring-cluster.nix;
-        "how-to-package-cert-manager" = ./how-to/package-stacks/cert-manager-cluster.nix;
         "how-to-package-cilium" = ./how-to/package-stacks/cilium-cluster.nix;
         "how-to-package-valkey" = ./how-to/package-stacks/valkey-cluster.nix;
         "how-to-package-velero" = ./how-to/package-stacks/velero-cluster.nix;
