@@ -1,4 +1,19 @@
 # stateful-volume-package.nix: a renameable PVC for migration-gate examples.
+#
+# This is a fixture, not a pattern to copy. An application package that builds
+# its own PersistentVolumeClaim fails evaluation; the supported shape is a
+# `storage` dependency on a separate persistent-volume-claim instance, which
+# leaves size, StorageClass and lifecycle with the cluster operator. See
+# /docs/how-to/package-task-guides/provision-persistent-storage/.
+#
+# The `meta.unsafe = [ "raw-pvc" ]` grant below is the explicit escape from
+# that rule. It exists here because these examples need to rename a claim on
+# demand to trigger the stateful migration gate, which is the thing being
+# demonstrated. Every grant is listed by the scorecard's `unsafeGrants` audit,
+# so it stays visible rather than becoming a quiet exception.
+#
+# `storageClassName` is hardcoded to "standard" because these clusters use the
+# kind flavor. A real package takes it from configuration.
 
 { scope, lib, ... }:
 

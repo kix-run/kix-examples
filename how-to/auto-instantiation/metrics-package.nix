@@ -33,10 +33,10 @@
         data.retentionDays = toString config.retentionDays;
       };
 
-      root = self.configMap // {
-        out = self.configMap.out // {
-          endpoint = "http://${self.configMap.out.fqdn}:9090";
-        };
-      };
+      # This package renders configuration, not a workload, so it publishes
+      # no address. `out.fqdn` exists on every namespaced resource, including
+      # this ConfigMap, but nothing serves that name. Advertising it as an
+      # endpoint would give consumers an address that never answers.
+      root = self.configMap;
     };
 }

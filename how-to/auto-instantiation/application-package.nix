@@ -24,7 +24,7 @@
         name = scope.instanceName;
         data = {
           databaseResource = database.out.name;
-          metricsEndpoint = metrics.out.endpoint;
+          metricsResource = metrics.out.name;
         };
       };
 

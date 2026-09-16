@@ -3,6 +3,9 @@
 # Recommended reading: 06-service-dep (package dependencies).
 #
 # What's new: the ingressNginx dependency makes kix.expose render an Ingress.
+# The instance is named `ingress-nginx`, not `ingressNginx`: a package names
+# its resources after its instance, and Kubernetes object names are lowercase.
+# The package's `meta.defaultAliases` keeps the `ingressNginx` dependency name.
 
 { kix, packages, ... }:
 
@@ -16,7 +19,7 @@ kix.buildCluster {
     kix.flavors.kind
     {
       # region:ingressControllerInstance
-      instances.ingress-system.ingressNginx = {
+      instances.ingress-system."ingress-nginx" = {
         package = packages."ingress-nginx";
       };
       # endregion:ingressControllerInstance
