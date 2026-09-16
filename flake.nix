@@ -20,6 +20,7 @@
 
   # Each example folder has its own cluster.nix. Add a new example by
   # appending a line here and creating examples/NN-name/cluster.nix.
+  # region:mkFlakeOutputs
   outputs =
     inputs:
     inputs.kixpkgs.lib.mkFlake {
@@ -31,7 +32,33 @@
         "09-typed-options" = ./tutorials/09-typed-options/cluster.nix;
         "10-reuse-packages" = ./tutorials/10-reuse-packages/cluster.nix;
         "19-scorecards" = ./tutorials/19-scorecards/cluster.nix;
+        "how-to-application" = ./how-to/application/cluster.nix;
+        "how-to-adoption" = ./how-to/adoption/cluster.nix;
+        "how-to-stateful-migration" = ./how-to/adoption/stateful-before-cluster.nix;
+        "how-to-adoption-takeover" = ./how-to/adoption/takeover-cluster.nix;
+        "how-to-helm-bridge" = ./how-to/adoption/helm-bridge-cluster.nix;
+        "how-to-auto-instantiation" = ./how-to/auto-instantiation/cluster.nix;
+        "how-to-composition" = ./how-to/composition/cluster.nix;
+        "how-to-fragments" = ./how-to/composition/fragments-cluster.nix;
+        "how-to-multi-env" = ./how-to/composition/multi-env-cluster.nix;
+        "how-to-package-storage" = ./how-to/package-stacks/storage-cluster.nix;
+        "how-to-package-python" = ./how-to/package-stacks/python-cluster.nix;
+        "how-to-package-stackgres" = ./how-to/package-stacks/stackgres-cluster.nix;
+        "how-to-package-monitoring" = ./how-to/package-stacks/monitoring-cluster.nix;
+        "how-to-package-cilium" = ./how-to/package-stacks/cilium-cluster.nix;
+        "how-to-package-valkey" = ./how-to/package-stacks/valkey-cluster.nix;
+        "how-to-package-velero" = ./how-to/package-stacks/velero-cluster.nix;
+        "how-to-package-victoria-metrics" = ./how-to/package-stacks/victoria-metrics-cluster.nix;
+        "how-to-platform-gateway" = ./how-to/platform/gateway-cluster.nix;
+        "how-to-platform-hostpath" = ./how-to/platform/hostpath-cluster.nix;
+        "how-to-platform-ingress" = ./how-to/platform/ingress-cluster.nix;
+        "how-to-platform-monitoring" = ./how-to/platform/monitoring-cluster.nix;
+        "how-to-platform-network-policy" = ./how-to/platform/network-policy-cluster.nix;
+        "how-to-platform-secrets" = ./how-to/platform/secrets-cluster.nix;
+        "how-to-platform-sops" = ./how-to/platform/sops-secrets-cluster.nix;
+        "how-to-platform-cloudflare-tunnel" = ./how-to/platform/cloudflare-tunnel-cluster.nix;
       };
     };
+  # endregion:mkFlakeOutputs
 }
 # endregion:exampleFlake

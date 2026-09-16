@@ -1,0 +1,4 @@
+# Test identity for the synthetic values in sops-credentials.enc.yaml.
+# Never commit an identity that can decrypt real credentials.
+# public key: age15mzgmqgh04ga0ud2zrm7fm8qep0zdj86jrzkqks78vegmlppmuhqd3vmnk
+AGE-SECRET-KEY-1RHMLWP6CGCJDN9XER642LCPACM6PNW6EAF6XWCDMQ2UVTDC4SZUSMZF6U7

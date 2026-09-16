@@ -23,12 +23,13 @@
         ]
       },
       "locked": {
-        "lastModified": 1780036041,
-        "narHash": "sha256-OrEgd11s09gUbx0+yXcVLyd7abStxLMmsaFcGwLLMuI=",
-        "owner": "adamcharnock",
-        "repo": "kixpkgs",
-        "rev": "6cdd93098a0c27e899e3f66531db6e820cf0507e",
-        "type": "github"
+        "lastModified": 1789068707,
+        "narHash": "sha256-aXiQ4IWL2o/X4k1ZMLapbHKxLdaYDNyBi6qvaigDXLo=",
+        "ref": "refs/heads/main",
+        "rev": "9dcf5b3e33b728ef3fc76a693e4feda2921b1913",
+        "revCount": 586,
+        "type": "git",
+        "url": "https://github.com/kix-run/kixpkgs"
       },
       "original": {
         "owner": "adamcharnock",
