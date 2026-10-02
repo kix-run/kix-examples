@@ -12,8 +12,6 @@
     version = "1.0.0";
     description = "Custom resource readiness example";
     owner = "platform";
-    # The package ships a CustomResourceDefinition, which a cluster holds once.
-    conflictsWith = [ "cluster:widget" ];
   };
 
   build =
