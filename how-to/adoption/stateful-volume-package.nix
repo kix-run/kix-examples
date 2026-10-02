@@ -12,8 +12,8 @@
 # demonstrated. Every grant is listed by the scorecard's `unsafeGrants` audit,
 # so it stays visible rather than becoming a quiet exception.
 #
-# `storageClassName` is hardcoded to "standard" because these clusters use the
-# kind flavor. A real package takes it from configuration.
+# The claim's StorageClass comes from the `storageClasses` dependency, which
+# the kind flavor's platform import answers.
 
 { scope, lib, ... }:
 
@@ -38,14 +38,19 @@
   };
 
   build =
-    { self, config, ... }:
+    {
+      self,
+      config,
+      storageClasses,
+      ...
+    }:
     {
       claim = scope.mkResource {
         apiVersion = "v1";
         kind = "PersistentVolumeClaim";
         name = config.claimName;
         spec = {
-          storageClassName = "standard";
+          storageClassName = storageClasses.out.storageClassName;
           accessModes = [ "ReadWriteOnce" ];
           resources.requests.storage = config.size;
         };

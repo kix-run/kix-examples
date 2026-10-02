@@ -13,7 +13,7 @@ kix.buildCluster {
   modules = [
     kix.flavors.kind
     (
-      { ref, ... }:
+      { ref, config, ... }:
       {
         namespaces = {
           apps = { };
@@ -29,14 +29,14 @@ kix.buildCluster {
               apiVersion = "v1";
               out = {
                 name = "legacy-api";
-                fqdn = "legacy-api.legacy.svc.cluster.local";
+                fqdn = "legacy-api.legacy.svc.${config.clusterDomain}";
                 port = 8080;
               };
             };
             aliases = [ "legacyApi" ];
             # endregion:importExistingService
 
-            extraDeps = [ ref.apps.legacy-api-contract.root ];
+            extraDeps = [ ref.apps.legacy-api-contract ];
           };
 
           apps.legacy-api-contract.package = contractPackage;

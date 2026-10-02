@@ -43,6 +43,16 @@ kix.buildCluster {
         grafana = {
           package = packages.grafana;
         };
+        # Grafana's administrator login. A real cluster keeps it in a SOPS
+        # source or a secret-ref instead of the cluster file.
+        grafana-admin = {
+          package = packages.secret;
+          aliases = [ "grafanaAdmin" ];
+          config.stringData = {
+            admin-user = "admin";
+            admin-password = "development-only-password";
+          };
+        };
       };
       # endregion:victoriaMetricsHaStack
     }

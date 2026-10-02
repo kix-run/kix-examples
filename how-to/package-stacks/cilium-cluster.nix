@@ -25,15 +25,10 @@ kix.buildCluster {
       # endregion:ciliumRoleAndPolicy
 
       # region:ciliumInstance
+      # Keeps Kind's kube-proxy; the IPAM pool is the kind flavour's
+      # cluster.network.podCidr, the podSubnet in kind-cilium.yaml.
       instances.kube-system.cilium = {
         package = packages.cilium;
-        config.values = {
-          # Keep Kind's kube-proxy and use the pod CIDR from kind-cilium.yaml.
-          kubeProxyReplacement = false;
-          ipam.operator.clusterPoolIPv4PodCIDRList = [ "10.244.0.0/16" ];
-
-          prometheus.enabled = false;
-        };
       };
       # endregion:ciliumInstance
     }

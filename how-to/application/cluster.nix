@@ -41,7 +41,7 @@ kix.buildCluster {
             replicas = 2;
             # region:healthCheckConfig
             healthCheck = {
-              enable = true;
+              enabled = true;
               retryFor = 60;
             };
             # endregion:healthCheckConfig

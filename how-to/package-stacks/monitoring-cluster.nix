@@ -32,6 +32,16 @@ kix.buildCluster {
         # Add the standard Kubernetes alerts, recording rules, and monitors.
         defaultRules.enabled = true;
       };
+      # Grafana's administrator login. A real cluster keeps it in a SOPS
+      # source or a secret-ref instead of the cluster file.
+      instances.monitoring-system.grafana-admin = {
+        package = packages.secret;
+        aliases = [ "grafanaAdmin" ];
+        config.stringData = {
+          admin-user = "admin";
+          admin-password = "development-only-password";
+        };
+      };
     }
   ];
   # endregion:monitoringStack
