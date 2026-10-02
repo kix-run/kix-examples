@@ -36,7 +36,7 @@ kix.buildCluster {
             aliases = [ "legacyApi" ];
             # endregion:importExistingService
 
-            extraDeps = [ ref.apps.legacy-api-contract.root ];
+            extraDeps = [ ref.apps.legacy-api-contract ];
           };
 
           apps.legacy-api-contract.package = contractPackage;
