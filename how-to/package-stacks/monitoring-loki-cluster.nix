@@ -42,5 +42,16 @@ kix.buildCluster {
         # endregion:lokiStack
       }
     )
+    # Grafana's administrator login, as in how-to-package-monitoring.
+    {
+      instances.monitoring-system.grafana-admin = {
+        package = packages.secret;
+        aliases = [ "grafanaAdmin" ];
+        config.stringData = {
+          admin-user = "admin";
+          admin-password = "development-only-password";
+        };
+      };
+    }
   ];
 }
