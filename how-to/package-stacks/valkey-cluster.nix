@@ -13,19 +13,18 @@ kix.buildCluster {
     kix.flavors.kind
     {
       # region:valkeyInstance
-      instances.cache.valkey = {
-        package = packages.valkey;
-        config = {
-          replicaCount = 1;
-          sentinel.enabled = false;
+      instances.cache = {
+        valkey = {
+          package = packages.valkey;
+          config.storage.size = "2Gi";
+        };
 
-          persistence = {
-            enabled = true;
-            size = "2Gi";
-          };
-
-          # Use SOPS or an existing Secret outside local development.
-          auth.password = "development-only-password";
+        # Outside local development, give the secret a SOPS `source` with
+        # keys = [ "password" ], or use a secret-ref to an existing Secret.
+        valkey-password = {
+          package = packages.secret;
+          aliases = [ "valkeyPassword" ];
+          config.stringData.password = "development-only-password";
         };
       };
       # endregion:valkeyInstance
