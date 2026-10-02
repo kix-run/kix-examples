@@ -13,7 +13,7 @@ kix.buildCluster {
   modules = [
     kix.flavors.kind
     (
-      { ref, ... }:
+      { ref, config, ... }:
       {
         namespaces = {
           apps = { };
@@ -29,7 +29,7 @@ kix.buildCluster {
               apiVersion = "v1";
               out = {
                 name = "legacy-api";
-                fqdn = "legacy-api.legacy.svc.cluster.local";
+                fqdn = "legacy-api.legacy.svc.${config.clusterDomain}";
                 port = 8080;
               };
             };
