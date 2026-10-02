@@ -54,11 +54,6 @@ kix.buildCluster {
 
         instances.kube-system.cilium = {
           package = packages.cilium;
-          config.values = {
-            kubeProxyReplacement = false;
-            ipam.operator.clusterPoolIPv4PodCIDRList = [ "10.244.0.0/16" ];
-            prometheus.enabled = false;
-          };
         };
 
         # region:networkPolicyInstances
