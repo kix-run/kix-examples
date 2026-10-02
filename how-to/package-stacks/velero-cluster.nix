@@ -14,26 +14,34 @@ kix.buildCluster {
     kix.flavors.kind
     {
       # region:veleroInstance
-      instances.velero-system.velero = {
-        package = packages.velero;
-        config = {
-          credentials.secretName = "velero-credentials";
+      instances.velero-system = {
+        # Secrets created outside Kix, with the keys the package reads.
+        velero-credentials = {
+          package = packages.secret-ref;
+          aliases = [ "cloudCredentials" ];
+          config.keys = [ "cloud" ];
+        };
+        velero-repo-credentials = {
+          package = packages.secret-ref;
+          aliases = [ "repositoryPassword" ];
+          config.keys = [ "repository-password" ];
+        };
 
-          backupStorageLocation = {
-            provider = "velero.io/aws";
-            bucket = "example-cluster-backups";
-            config = {
-              region = "eu-central-1";
-              s3ForcePathStyle = "false";
+        velero = {
+          package = packages.velero;
+          config = {
+            backupStorageLocation = {
+              objectStorage.bucket = "example-cluster-backups";
+              config.region = "us-east-1";
             };
-          };
 
-          schedules.daily = {
-            schedule = "0 2 * * *";
-            template = {
-              includedNamespaces = [ "applications" ];
-              ttl = "720h0m0s";
-              defaultVolumesToFsBackup = true;
+            schedules.daily = {
+              schedule = "0 2 * * *";
+              template = {
+                includedNamespaces = [ "applications" ];
+                ttl = "720h0m0s";
+                defaultVolumesToFsBackup = true;
+              };
             };
           };
         };
