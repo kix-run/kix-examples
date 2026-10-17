@@ -24,15 +24,27 @@ kix.buildCluster {
       # endregion:tunnelOriginInstance
 
       # region:cloudflaredInstance
-      instances.tunnel-system.cloudflared = {
-        package = packages.cloudflared;
-        config = {
-          image = {
-            repository = "cloudflare/cloudflared";
-            tag = "2026.9.0";
+      instances.tunnel-system = {
+        cloudflared = {
+          package = packages.cloudflared;
+          config = {
+            image = {
+              repository = "cloudflare/cloudflared";
+              tag = "2026.9.0";
+            };
+            replicas = 2;
           };
-          tokenSource = ./cloudflare-token.enc.yaml;
-          replicas = 2;
+        };
+
+        # The tunnel token, decrypted from the SOPS file at deploy. The
+        # alias is the dependency name cloudflared reads it under.
+        tunnel-token = {
+          package = packages.secret;
+          aliases = [ "tunnelToken" ];
+          config = {
+            keys = [ "token" ];
+            source = ./cloudflare-token.enc.yaml;
+          };
         };
       };
       # endregion:cloudflaredInstance
