@@ -35,6 +35,7 @@ kix.buildCluster {
             };
           };
 
+          # region:configuredGateway
           gateway = {
             package = reverseProxyPackage;
 
@@ -49,6 +50,7 @@ kix.buildCluster {
 
             deps.backend = ref.tutorial-09.backend;
           };
+          # endregion:configuredGateway
         };
       }
     )

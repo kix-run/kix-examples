@@ -55,6 +55,7 @@
   };
   # endregion:options
 
+  # region:buildWithOptions
   build =
     {
       self,
@@ -88,6 +89,7 @@
         '';
       };
 
+      # region:restOfBuild
       deployment =
         {
           inherit name;
@@ -144,5 +146,7 @@
         |> scope.mkResource;
 
       root = self.service;
+      # endregion:restOfBuild
     };
+  # endregion:buildWithOptions
 }

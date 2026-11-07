@@ -14,6 +14,7 @@
 let
   reverseProxyPackage = import ./reverse-proxy-package.nix;
 in
+# region:scorecardCluster
 kix.buildCluster {
   name = "19-scorecards";
 
@@ -31,6 +32,7 @@ kix.buildCluster {
         # owns the checks we want to run against it.
         scorecard = import ./scorecard.nix { inherit lib kix; };
 
+        # region:scorecardInstances
         namespaces = {
           app-v1 = { };
           app-v2 = { };
@@ -65,7 +67,9 @@ kix.buildCluster {
             deps.backend = ref.app-v2.backend;
           };
         };
+        # endregion:scorecardInstances
       }
     )
   ];
 }
+# endregion:scorecardCluster

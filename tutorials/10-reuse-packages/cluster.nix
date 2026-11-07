@@ -23,6 +23,7 @@ kix.buildCluster {
     (
       { ref, ... }:
       {
+        # region:reusedInstances
         namespaces = {
           app-v1 = { };
           app-v2 = { };
@@ -62,6 +63,7 @@ kix.buildCluster {
             deps.backend = ref.app-v2.backend;
           };
         };
+        # endregion:reusedInstances
       }
     )
   ];

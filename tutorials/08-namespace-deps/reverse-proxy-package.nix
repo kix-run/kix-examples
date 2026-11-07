@@ -56,7 +56,7 @@
       #
       # The interpolation `${backend.out.fqdn}` looks like a normal
       # string substitution. It also carries Nix string context, which
-      # Kix uses to stamp a `kix.dev/depends-on` annotation onto this
+      # Kix uses to stamp a `kix.run/depends-on` annotation onto this
       # ConfigMap — that's how the deploy DAG learns the backend must
       # be applied first.
       configmap = scope.mkResource {

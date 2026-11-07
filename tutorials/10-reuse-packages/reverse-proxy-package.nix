@@ -46,6 +46,7 @@
       config,
       ...
     }:
+    # region:scopedResourceName
     let
       name = scope.instanceName;
     in
@@ -54,6 +55,7 @@
         apiVersion = "v1";
         kind = "ConfigMap";
         inherit name;
+        # region:configmapData
         data."default.conf" = ''
           server {
               listen 80;
@@ -68,7 +70,9 @@
               }
           }
         '';
+        # endregion:configmapData
       };
+      # endregion:scopedResourceName
 
       deployment =
         {

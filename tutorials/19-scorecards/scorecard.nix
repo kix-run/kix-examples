@@ -30,6 +30,7 @@ let
     builtins.elem "reverse-proxy" (inst._meta.packageMeta.provides or [ ]);
   # endregion:isProxy
 in
+# region:scorecardStructure
 {
   enable = true;
 
@@ -44,6 +45,7 @@ in
     #    gracefulShutdown, hasPDB.
     reliability = kix.rules.reliability;
 
+    # region:customRules
     # 2. Custom package-level rule. Runs once per instance, with
     #    access to that instance's resolved `config` and `resources`.
     # region:packageRule
@@ -129,5 +131,7 @@ in
         }) (builtins.attrNames collisions);
     };
     # endregion:clusterRule
+    # endregion:customRules
   };
 }
+# endregion:scorecardStructure

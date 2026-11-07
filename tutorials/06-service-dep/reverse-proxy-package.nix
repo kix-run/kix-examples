@@ -12,10 +12,12 @@
 # the backend without hardcoded Service names.
 
 {
+  # region:meta
   meta = {
     version = "0.0.1";
     description = "nginx reverse-proxy in front of a backend Service";
   };
+  # endregion:meta
 
   # The build function is called once per instance, by Kix. It receives
   # a handful of named args:
@@ -64,7 +66,7 @@
       #
       # That interpolation looks like a normal string substitution, but
       # it also carries Nix string context, which Kix uses to stamp a
-      # `kix.dev/depends-on` annotation onto this ConfigMap — that's
+      # `kix.run/depends-on` annotation onto this ConfigMap — that's
       # how the deploy DAG learns the backend must be applied first.
       # region:configmap
       configmap = scope.mkResource {
@@ -103,6 +105,7 @@
       # `.out.name` rather than hardcoding the string means the
       # Deployment carries a Kix dep edge on the ConfigMap, so a rebuilt
       # ConfigMap forces a Deployment rollout.
+      # region:deployment
       deployment =
         {
           inherit name;
@@ -144,6 +147,7 @@
           };
         }
         |> scope.mkDeployment;
+      # endregion:deployment
 
       # Service.
       #
@@ -151,6 +155,7 @@
       # workload: the selector and ports come from the Deployment so
       # they can't drift out of sync. We then run the result through
       # `scope.mkResource` to wrap it like any other Kix resource.
+      # region:service
       service =
         self.deployment
         |> kix.service.fromWorkload {
@@ -165,6 +170,7 @@
           ];
         }
         |> scope.mkResource;
+      # endregion:service
 
       # Root.
       #

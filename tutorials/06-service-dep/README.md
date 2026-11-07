@@ -71,7 +71,7 @@ LoadBalancer.
 
 - **See the wiring:** `kix build 06-service-dep` prints the YAML. Look
   at the gateway's ConfigMap — the `proxy_pass` URL has the real FQDN
-  baked in. Note the `kix.dev/depends-on` annotation pointing at the
+  baked in. Note the `kix.run/depends-on` annotation pointing at the
   backend.
 - **Rename the backend:** change `backend = { ... }` to `api = { ... }`
   and rebuild. Kix can't find a `backend` for the gateway and refuses

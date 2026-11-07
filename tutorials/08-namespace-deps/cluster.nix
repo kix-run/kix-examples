@@ -19,6 +19,7 @@
 # What's new: `deps.backend = ref.platform.backend`, which wires a dep
 # across namespaces instead of relying on same-namespace name matching.
 
+# region:clusterFrame
 { kix, packages }:
 
 let
@@ -33,6 +34,7 @@ kix.buildCluster {
     (
       { ref, ... }:
       {
+        # region:namespacesAndInstances
         namespaces = {
           platform = { };
           app = { };
@@ -63,7 +65,9 @@ kix.buildCluster {
           };
           # endregion:crossNamespaceDep
         };
+        # endregion:namespacesAndInstances
       }
     )
   ];
 }
+# endregion:clusterFrame
