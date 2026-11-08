@@ -57,6 +57,21 @@
         "how-to-platform-secrets" = ./how-to/platform/secrets-cluster.nix;
         "how-to-platform-sops" = ./how-to/platform/sops-secrets-cluster.nix;
         "how-to-platform-cloudflare-tunnel" = ./how-to/platform/cloudflare-tunnel-cluster.nix;
+        # The homelab scenario: one service set and its migration variants.
+        "homelab-kind" = ./how-to/homelab/cluster-kind.nix;
+        "homelab-kind-gateway" = ./how-to/homelab/cluster-kind-gateway.nix;
+        "homelab-kind-gateway-migrate" = ./how-to/homelab/cluster-kind-gateway-migrate.nix;
+        "homelab-kind-tls" = ./how-to/homelab/cluster-kind-tls.nix;
+        "homelab-kind-tls-migrate" = ./how-to/homelab/cluster-kind-tls-migrate.nix;
+        "homelab-kind-upgrade-small" = ./how-to/homelab/cluster-kind-upgrade-small.nix;
+        "homelab-kind-upgrade-broad" = ./how-to/homelab/cluster-kind-upgrade-broad.nix;
+        "homelab-kind-pvc-resize" = ./how-to/homelab/cluster-kind-pvc-resize.nix;
+        "homelab-kind-storage-migrate" = ./how-to/homelab/cluster-kind-storage-migrate.nix;
+        "homelab-kind-db-resize" = ./how-to/homelab/cluster-kind-db-resize.nix;
+        "homelab-kind-ns-rename" = ./how-to/homelab/cluster-kind-ns-rename.nix;
+        "homelab-kind-pg17" = ./how-to/homelab/cluster-kind-pg17.nix;
+        "homelab-kind-env-stamped" = ./how-to/homelab/cluster-kind-env-stamped.nix;
+        "homelab-kind-env-stamped-dev-change" = ./how-to/homelab/cluster-kind-env-stamped-dev-change.nix;
       };
     };
   # endregion:mkFlakeOutputs
