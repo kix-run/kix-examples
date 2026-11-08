@@ -9,17 +9,19 @@
 { lib, ... }:
 {
   options = {
-    # Per-service feature gates for staged rollout. Each app group in
-    # services.nix is wrapped in `lib.mkIf config.homelab.features.<name>`,
-    # so the first real deploy can ship a minimal set and turn the rest
-    # on one at a time.
-    homelab.features = {
-      immich = lib.mkEnableOption "Immich photo backup" // {
-        default = true;
+    # Per-service feature gates. Each app group in services.nix is wrapped
+    # in `lib.mkIf config.homelab.features.<name>`. Every group but Home
+    # Assistant is on by default. Its chart runs the container as root, which
+    # the scorecard rejects at error severity.
+    homelab.features =
+      let
+        enabled = description: lib.mkEnableOption description // { default = true; };
+      in
+      {
+        immich = enabled "Immich photo backup";
+        nas = enabled "NAS / filebrowser";
+        vaultwarden = enabled "Vaultwarden password manager";
+        homeassistant = lib.mkEnableOption "Home Assistant";
       };
-      nas = lib.mkEnableOption "NAS / filebrowser";
-      vaultwarden = lib.mkEnableOption "Vaultwarden password manager";
-      homeassistant = lib.mkEnableOption "Home Assistant";
-    };
   };
 }
