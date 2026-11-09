@@ -1,6 +1,6 @@
 # kix-examples
 
-A hands-on tour of [Kix](https://kixops.dev) patterns, using small
+A hands-on tour of [Kix](https://kix.run) patterns, using small
 clusters you can run locally on [kind](https://kind.sigs.k8s.io/).
 
 Each example has its own folder under `tutorials/`, with a `cluster.nix`
@@ -17,21 +17,21 @@ The repo also contains a sibling directory:
   `how-to/homelab/demos/` that deploy and check each one.
 
 Finished versions of "build it yourself" tutorial clusters (e.g.
-`04-from-scratch`) live in `kixpkgs/docs/overlays/` and are layered
+`04-from-scratch`) live in `kix/docs/overlays/` and are layered
 onto a writable workspace copy of this repo by the docs captures
 pipeline. They are deliberately not in this repo so the public
 `kix list clusters` doesn't reveal them.
 
 > [!NOTE]
-> `adamcharnock/kixpkgs` is private. `flake.nix` fetches it via the
-> GitHub fetcher, so any consumer must provide a token. Locally, plug
+> `kix-run/kix` is private until it is published. `flake.nix` fetches it
+> with the GitHub fetcher, so any consumer must provide a token. Locally, plug
 > `gh auth token` into `~/.config/nix/nix.conf`:
 >
 > ```
 > access-tokens = github.com=ghp_…
 > ```
 >
-> CI in `kixpkgs` uses its auto-issued `GITHUB_TOKEN`.
+> CI in `kix-run/kix` uses its auto-issued `GITHUB_TOKEN`.
 
 ## Prerequisites
 
@@ -40,10 +40,7 @@ pipeline. They are deliberately not in this repo so the public
 - **kubectl**
 - **Docker** (or Colima / OrbStack on macOS) — kind runs the cluster as a
   container, so a Docker-compatible daemon must be up
-- **kix CLI** — install once with:
-  ```sh
-  nix profile install git+file:///Users/adam/ghq/github.com/adamcharnock/kixpkgs#kix
-  ```
+- **kix CLI**: see [Install and run the Kix CLI](https://kix.run/docs/how-to/start-and-inspect/install-and-run-the-kix-cli/).
 
 ## Quick start
 
