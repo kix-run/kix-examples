@@ -5,16 +5,16 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # Fetched via the GitHub fetcher. While the repo is private, every
-    # consumer (local dev, kixpkgs CI, the captures pipeline) must
+    # Fetched via the GitHub fetcher. While kix-run/kix is private, every
+    # consumer (local dev, Kix CI, the captures pipeline) must
     # provide a token: `gh auth token` plugged into nix.conf
     # `access-tokens = github.com=...`, or the workflow's auto-issued
-    # GITHUB_TOKEN. The kixpkgs captures pipeline rewrites this URL
+    # GITHUB_TOKEN. The Kix captures pipeline rewrites this URL
     # to `path:<store>` and drops flake.lock before invoking kix, so
     # its sandboxed eval never hits the network. (kix's clap CLI
     # doesn't forward `--override-input`, so the rewrite is the only
     # in-band knob.)
-    kixpkgs.url = "github:adamcharnock/kixpkgs";
+    kixpkgs.url = "github:kix-run/kix";
     kixpkgs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
