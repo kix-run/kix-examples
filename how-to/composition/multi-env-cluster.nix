@@ -15,7 +15,7 @@ let
         package = packages.echo-server;
         config = {
           message = "Hello from ${env.name}";
-          replicaCount = env.config.replicaCount;
+          replicas = env.config.replicas;
         };
       };
     };
@@ -30,10 +30,10 @@ kix.buildCluster {
       # region:stampEnvironments
       instances =
         kix.mkEnv "development" {
-          config.replicaCount = 1;
+          config.replicas = 1;
         } { app = application; }
         // kix.mkEnv "production" {
-          config.replicaCount = 3;
+          config.replicas = 3;
           overrides.app.web.config.message = "Production storefront";
         } { app = application; };
       # endregion:stampEnvironments
