@@ -20,7 +20,7 @@ kix.buildCluster {
     {
       # region:ingressControllerInstance
       instances.ingress-system."ingress-nginx" = {
-        package = packages."ingress-nginx";
+        package = packages.experimental."ingress-nginx";
       };
       # endregion:ingressControllerInstance
 

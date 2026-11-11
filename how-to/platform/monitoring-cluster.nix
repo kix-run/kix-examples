@@ -17,7 +17,7 @@ kix.buildCluster {
     {
       # region:prometheusOperatorInstance
       instances.monitoring-system.prometheus = {
-        package = packages."prometheus-operator";
+        package = packages.experimental."prometheus-operator";
       };
       # endregion:prometheusOperatorInstance
 

@@ -32,7 +32,7 @@ kix.buildCluster {
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         monitoring.loki.storageSize = lib.mkDefault "5Gi";
@@ -43,7 +43,7 @@ kix.buildCluster {
         instances.monitoring-system.loki-logs.config.healthCheck.enabled = true;
 
         instances.ingress-nginx.ingress-nginx = {
-          package = packages."ingress-nginx";
+          package = packages.experimental."ingress-nginx";
         };
 
         # A self-signed ClusterIssuer. It asks for `certManager`, so
@@ -51,7 +51,7 @@ kix.buildCluster {
         # so every package that uses `kix.expose` gets Ingress TLS.
         # region:selfSignedClusterIssuer
         instances.cert-manager.selfsigned = {
-          package = packages.cluster-issuer;
+          package = packages.experimental.cluster-issuer;
           config.spec.selfSigned = { };
         };
         # endregion:selfSignedClusterIssuer

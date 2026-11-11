@@ -28,7 +28,7 @@ kix.buildCluster {
         };
 
         velero = {
-          package = packages.velero;
+          package = packages.experimental.velero;
           config = {
             backupStorageLocation = {
               objectStorage.bucket = "example-cluster-backups";

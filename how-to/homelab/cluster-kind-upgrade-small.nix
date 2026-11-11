@@ -29,7 +29,7 @@ kix.buildCluster {
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         # The only change from cluster-kind.nix.
@@ -39,7 +39,7 @@ kix.buildCluster {
         instances.monitoring-system.loki-logs.config.healthCheck.enabled = true;
 
         instances.ingress-nginx.ingress-nginx = {
-          package = packages."ingress-nginx";
+          package = packages.experimental."ingress-nginx";
         };
       }
     )

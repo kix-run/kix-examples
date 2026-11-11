@@ -54,7 +54,7 @@ VAULT_SVC="vaultwarden"
 VAULT_PORT=8080
 VAULT_LOCAL=8088
 
-# how-to/homelab/base.nix turns on monitoring through kix.modules.monitoring.
+# how-to/homelab/base.nix turns on monitoring through kix.modules.experimental.monitoring.
 GRAFANA_NS="monitoring-system"
 GRAFANA_SVC="grafana"
 GRAFANA_PORT=80

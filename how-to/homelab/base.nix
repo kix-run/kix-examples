@@ -16,11 +16,14 @@
   imports = [
     ./platform.nix
     ./services.nix
-    kix.modules.monitoring
+    kix.modules.experimental.monitoring
   ];
 
-  # Auto-instantiate deps (coredns, valkey, stackgres-operator, etc.)
-  availablePackages = packages;
+  # Let Kix add the packages that other instances depend on. `packages`
+  # holds the stable packages; experimental ones join by name.
+  availablePackages = packages // {
+    inherit (packages.experimental) stackgres-operator cert-manager;
+  };
 
   cluster.domain = "homelab.lan";
   clusterLabels = {

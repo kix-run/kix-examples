@@ -46,12 +46,12 @@ kix.buildCluster {
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         # Both environments route through the same ingress-nginx.
         instances.ingress-nginx.ingress-nginx = {
-          package = packages."ingress-nginx";
+          package = packages.experimental."ingress-nginx";
         };
 
         # Shared database operator, one per cluster. Its ClusterRoleBinding
@@ -61,7 +61,7 @@ kix.buildCluster {
         # the other env's operator pointed at the wrong ServiceAccount. The
         # duplicate-identity check now refuses that build.
         instances.stackgres.stackgres-operator = {
-          package = packages."stackgres-operator";
+          package = packages.experimental."stackgres-operator";
         };
 
         # The dev environment.
@@ -70,12 +70,12 @@ kix.buildCluster {
           # StackGres and CloudNativePG both answer `postgres`; this
           # optional instance picks StackGres for the database below.
           stackgres-cluster = {
-            package = packages.stackgres-cluster;
+            package = packages.experimental.stackgres-cluster;
             optional = true;
           };
           # Development only; outside it, a SOPS `passwordSource`.
           vaultwarden-db = {
-            package = packages.stackgres-database;
+            package = packages.experimental.stackgres-database;
             config.password = "dev-vaultwarden-password";
           };
           storage = {
@@ -83,7 +83,7 @@ kix.buildCluster {
             config.size = "512Mi";
           };
           vaultwarden = {
-            package = packages.vaultwarden;
+            package = packages.experimental.vaultwarden;
             config.ingress.host = "vault-dev.homelab.lan";
           };
         };
@@ -94,7 +94,7 @@ kix.buildCluster {
             config.size = "10Gi";
           };
           filebrowser = {
-            package = packages.filebrowser;
+            package = packages.experimental.filebrowser;
             config.ingress.host = "files-dev.homelab.lan";
           };
         };
@@ -105,12 +105,12 @@ kix.buildCluster {
           # StackGres and CloudNativePG both answer `postgres`; this
           # optional instance picks StackGres for the database below.
           stackgres-cluster = {
-            package = packages.stackgres-cluster;
+            package = packages.experimental.stackgres-cluster;
             optional = true;
           };
           # Development only; outside it, a SOPS `passwordSource`.
           vaultwarden-db = {
-            package = packages.stackgres-database;
+            package = packages.experimental.stackgres-database;
             config.password = "staging-vaultwarden-password";
           };
           storage = {
@@ -118,7 +118,7 @@ kix.buildCluster {
             config.size = "2Gi";
           };
           vaultwarden = {
-            package = packages.vaultwarden;
+            package = packages.experimental.vaultwarden;
             config.ingress.host = "vault-staging.homelab.lan";
           };
         };
@@ -129,7 +129,7 @@ kix.buildCluster {
             config.size = "50Gi";
           };
           filebrowser = {
-            package = packages.filebrowser;
+            package = packages.experimental.filebrowser;
             config.ingress.host = "files-staging.homelab.lan";
           };
         };

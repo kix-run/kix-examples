@@ -10,14 +10,14 @@ kix.buildCluster {
   name = "how-to-package-monitoring";
 
   # region:monitoringStack
-  # `kix.modules.monitoring` reads the package catalogue, which buildCluster
+  # `kix.modules.experimental.monitoring` reads the package catalogue, which buildCluster
   # does not pass to modules on its own. specialArgs forwards it.
   specialArgs = { inherit kix packages; };
 
   modules = [
     kix.flavors.kind
     {
-      imports = [ kix.modules.monitoring ];
+      imports = [ kix.modules.experimental.monitoring ];
 
       monitoring = {
         enabled = true;

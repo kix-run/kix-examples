@@ -17,7 +17,7 @@ kix.buildCluster {
     (
       { config, ... }:
       {
-        imports = [ kix.modules.monitoring ];
+        imports = [ kix.modules.experimental.monitoring ];
 
         # region:lokiStack
         monitoring = {
