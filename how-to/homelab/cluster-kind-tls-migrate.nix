@@ -3,9 +3,9 @@
 # The cluster name is `homelab-kind`, so a deploy over a `homelab-kind`
 # activation (plain HTTP) is an upgrade that adds TLS.
 #
-# Change from cluster-kind.nix: a self-signed ClusterIssuer. It needs
-# cert-manager, so Kix adds cert-manager, and every package that uses
-# `kix.expose` gets an Ingress with TLS. No service configuration changes.
+# Change from cluster-kind.nix: cert-manager and a self-signed
+# ClusterIssuer. Every package that uses `kix.expose` gets an Ingress with
+# TLS. No service configuration changes.
 #
 # Deploying `homelab-kind` again removes cert-manager and the issuer, and
 # the Ingresses go back to plain HTTP.
@@ -49,10 +49,11 @@ kix.buildCluster {
           package = packages.experimental."ingress-nginx";
         };
 
-        # The change from the baseline: a self-signed ClusterIssuer. It asks
-        # for `certManager`, so cert-manager is auto-instantiated, and it
-        # answers `clusterIssuer`, so every package that uses `kix.expose`
-        # gets Ingress TLS.
+        # The change from the baseline: cert-manager and a self-signed
+        # ClusterIssuer. The issuer asks for `certManager` and answers
+        # `clusterIssuer`, so every package that uses `kix.expose` gets
+        # Ingress TLS.
+        instances.cert-manager.cert-manager.package = packages.experimental.cert-manager;
         instances.cert-manager.selfsigned = {
           package = packages.experimental.cluster-issuer;
           config.spec.selfSigned = { };

@@ -46,10 +46,12 @@ kix.buildCluster {
           package = packages.experimental."ingress-nginx";
         };
 
-        # A self-signed ClusterIssuer. It asks for `certManager`, so
-        # cert-manager is auto-instantiated, and it answers `clusterIssuer`,
-        # so every package that uses `kix.expose` gets Ingress TLS.
+        # cert-manager and a self-signed ClusterIssuer. The issuer asks for
+        # `certManager` and answers `clusterIssuer`, so every package that
+        # uses `kix.expose` gets Ingress TLS. cert-manager runs once per
+        # cluster, so it is declared in a namespace of its own.
         # region:selfSignedClusterIssuer
+        instances.cert-manager.cert-manager.package = packages.experimental.cert-manager;
         instances.cert-manager.selfsigned = {
           package = packages.experimental.cluster-issuer;
           config.spec.selfSigned = { };

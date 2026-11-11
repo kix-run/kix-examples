@@ -196,6 +196,8 @@ echo "Kind ready."
 # ── deploy with kix ──────────────────────────────────────────────────────
 step_start
 log "deploying homelab cluster via kix (flake .)"
+# The database passwords are SOPS files encrypted to the examples' test-only key.
+SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-how-to/platform/test-only-age-key.txt}" \
 kix --no-cache --flake . --context "$KCTX" deploy homelab-kind -y --tui --on-error continue \
     || warn "kix deploy reported errors (continuing — HTTPRoutes need Gateway API CRDs)"
 step_done

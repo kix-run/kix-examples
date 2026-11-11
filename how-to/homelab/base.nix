@@ -19,11 +19,12 @@
     kix.modules.experimental.monitoring
   ];
 
-  # Let Kix add the packages that other instances depend on. `packages`
-  # holds the stable packages; experimental ones join by name.
-  availablePackages = packages // {
-    inherit (packages.experimental) stackgres-operator cert-manager;
-  };
+  # Let Kix add the stable packages that other instances depend on.
+  availablePackages = packages;
+
+  # The StackGres operator runs once per cluster, so it has a namespace of
+  # its own rather than sitting beside the first database that needs it.
+  instances.stackgres-system.stackgres-operator.package = packages.experimental.stackgres-operator;
 
   cluster.domain = "homelab.lan";
   clusterLabels = {

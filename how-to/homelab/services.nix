@@ -73,7 +73,8 @@ in
         config = {
           database = "immich";
           user = "immich";
-          password = "immich-dev-password";
+          passwordSource = ./secrets/immich-db.sops.yaml;
+          passwordHash = "sha256-vwbLaeeessNjQjxi7gXuctFP+UjgTrRHzy8XO/cXeTc=";
         };
       };
 
@@ -140,7 +141,8 @@ in
         config = {
           database = "vaultwarden";
           user = "vaultwarden";
-          password = "vaultwarden-dev-password";
+          passwordSource = ./secrets/vaultwarden-db.sops.yaml;
+          passwordHash = "sha256-vSRCg4c2Q8jZrB+qWUa7YhXrpdZOoafVsi2KtKkZPRQ=";
         };
       };
 
