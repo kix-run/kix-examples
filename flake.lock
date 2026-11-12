@@ -92,11 +92,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794472591,
-        "narHash": "sha256-896eAAK+bg1blmjT0JIAyzucChTgBedjN4W3BspyC0s=",
+        "lastModified": 1794516332,
+        "narHash": "sha256-RQXfuTXZ3a6GD/hyF8ZTxE7WzSWNlBOsJgnWQZsJCmI=",
         "owner": "kix-run",
         "repo": "kix",
-        "rev": "ab159d5dd645540b50f6e58d544e459bd6beb6bc",
+        "rev": "d115378f7dca008226f3dfe7943aeddd36f3134f",
         "type": "github"
       },
       "original": {
