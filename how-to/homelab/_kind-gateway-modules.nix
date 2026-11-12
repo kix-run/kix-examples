@@ -26,7 +26,7 @@
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         monitoring.loki.storageSize = lib.mkDefault "5Gi";
@@ -38,7 +38,7 @@
         # to this Gateway. Controller + Gateway API CRDs are installed
         # by the deploy scripts before `kix deploy`.
         instances.gateway-system.gateway = {
-          package = packages."envoy-gateway";
+          package = packages.experimental."envoy-gateway";
           config = {
             controllerName = "gateway.envoyproxy.io/gatewayclass-controller";
             listeners = [

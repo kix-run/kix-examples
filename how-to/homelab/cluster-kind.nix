@@ -36,7 +36,7 @@ kix.buildCluster {
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         # Smaller Loki PVC for kind.
@@ -50,7 +50,7 @@ kix.buildCluster {
         # alias that kix.expose consumes to emit Ingress resources instead
         # of HTTPRoutes (kind doesn't ship Gateway API CRDs).
         instances.ingress-nginx.ingress-nginx = {
-          package = packages."ingress-nginx";
+          package = packages.experimental."ingress-nginx";
         };
       }
     )

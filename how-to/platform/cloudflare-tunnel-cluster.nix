@@ -26,7 +26,7 @@ kix.buildCluster {
       # region:cloudflaredInstance
       instances.tunnel-system = {
         cloudflared = {
-          package = packages.cloudflared;
+          package = packages.experimental.cloudflared;
           config = {
             image = {
               repository = "cloudflare/cloudflared";

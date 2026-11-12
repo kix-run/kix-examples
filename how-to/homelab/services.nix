@@ -28,7 +28,7 @@ in
     # --- Shared Postgres (StackGres), always on ---
     {
       data.postgres = {
-        package = packages.stackgres-cluster;
+        package = packages.experimental.stackgres-cluster;
         aliases = [ "postgres" ];
         config = {
           instances = 1;
@@ -67,13 +67,14 @@ in
       # Provides the `database` alias immich depends on; the extensions immich
       # adds to it (vchord and others) are forwarded to the postgres backend.
       immich.immich-db = {
-        package = packages.stackgres-database;
+        package = packages.experimental.stackgres-database;
         aliases = [ "database" ];
         deps.postgres = ref.data.postgres;
         config = {
           database = "immich";
           user = "immich";
-          password = "immich-dev-password";
+          passwordSource = ./secrets/immich-db.sops.yaml;
+          passwordHash = "sha256-vwbLaeeessNjQjxi7gXuctFP+UjgTrRHzy8XO/cXeTc=";
         };
       };
 
@@ -82,7 +83,7 @@ in
         config.size = "100Gi"; # expand when on ZFS
       };
 
-      immich.immich.package = packages.immich;
+      immich.immich.package = packages.experimental.immich;
     })
 
     # --- NAS: file browsing ---
@@ -109,7 +110,7 @@ in
       };
 
       nas.filebrowser = {
-        package = packages.filebrowser;
+        package = packages.experimental.filebrowser;
         config = {
           ingress.host = "files.${domain}"; # override: "filebrowser" is too long
           # A multi-hour upload over a home connection outlasts the 2h default.
@@ -135,17 +136,18 @@ in
       # A literal password; a deployment with real users sets
       # passwordSource and passwordHash instead.
       vaultwarden.vaultwarden-db = {
-        package = packages.stackgres-database;
+        package = packages.experimental.stackgres-database;
         deps.postgres = ref.data.postgres;
         config = {
           database = "vaultwarden";
           user = "vaultwarden";
-          password = "vaultwarden-dev-password";
+          passwordSource = ./secrets/vaultwarden-db.sops.yaml;
+          passwordHash = "sha256-vSRCg4c2Q8jZrB+qWUa7YhXrpdZOoafVsi2KtKkZPRQ=";
         };
       };
 
       vaultwarden.vaultwarden = {
-        package = packages.vaultwarden;
+        package = packages.experimental.vaultwarden;
         # ingress.host defaults to vaultwarden.<domain> ✓
       };
     })

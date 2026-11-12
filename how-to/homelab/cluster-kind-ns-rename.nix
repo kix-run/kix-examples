@@ -35,7 +35,7 @@ kix.buildCluster {
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         monitoring.loki.storageSize = lib.mkDefault "5Gi";
@@ -44,7 +44,7 @@ kix.buildCluster {
         instances.monitoring-system.loki-logs.config.healthCheck.enabled = true;
 
         instances.ingress-nginx.ingress-nginx = {
-          package = packages."ingress-nginx";
+          package = packages.experimental."ingress-nginx";
         };
 
         # The change: File Browser moves from `nas` to `filebrowser`.
@@ -64,7 +64,7 @@ kix.buildCluster {
           };
 
           filebrowser = {
-            package = packages.filebrowser;
+            package = packages.experimental.filebrowser;
             config.ingress.host = "files.${domain}";
           };
         };

@@ -35,14 +35,14 @@ kix.buildCluster {
         networkPolicy.enable = true;
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         # As in homelab-kind, so this setting is not part of the change.
         instances.monitoring-system.loki-logs.config.healthCheck.enabled = true;
 
         instances.ingress-nginx.ingress-nginx = {
-          package = packages."ingress-nginx";
+          package = packages.experimental."ingress-nginx";
         };
 
         # The change: larger database and Loki volumes.

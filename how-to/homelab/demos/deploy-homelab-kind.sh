@@ -54,7 +54,7 @@ VAULT_SVC="vaultwarden"
 VAULT_PORT=8080
 VAULT_LOCAL=8088
 
-# how-to/homelab/base.nix turns on monitoring through kix.modules.monitoring.
+# how-to/homelab/base.nix turns on monitoring through kix.modules.experimental.monitoring.
 GRAFANA_NS="monitoring-system"
 GRAFANA_SVC="grafana"
 GRAFANA_PORT=80
@@ -196,6 +196,8 @@ echo "Kind ready."
 # ── deploy with kix ──────────────────────────────────────────────────────
 step_start
 log "deploying homelab cluster via kix (flake .)"
+# The database passwords are SOPS files encrypted to the examples' test-only key.
+SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-how-to/platform/test-only-age-key.txt}" \
 kix --no-cache --flake . --context "$KCTX" deploy homelab-kind -y --tui --on-error continue \
     || warn "kix deploy reported errors (continuing — HTTPRoutes need Gateway API CRDs)"
 step_done

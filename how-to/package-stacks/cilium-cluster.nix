@@ -28,7 +28,7 @@ kix.buildCluster {
       # Keeps Kind's kube-proxy; the IPAM pool is the kind flavour's
       # cluster.network.podCidr, the podSubnet in kind-cilium.yaml.
       instances.kube-system.cilium = {
-        package = packages.cilium;
+        package = packages.experimental.cilium;
       };
       # endregion:ciliumInstance
     }

@@ -17,7 +17,7 @@ kix.buildCluster {
     {
       # region:gatewayInstance
       instances.gateway-system.gateway = {
-        package = packages."envoy-gateway";
+        package = packages.experimental."envoy-gateway";
         config.listeners = [
           {
             name = "http";

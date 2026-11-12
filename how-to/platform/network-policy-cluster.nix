@@ -53,7 +53,7 @@ kix.buildCluster {
         # endregion:externalWorkloadIntent
 
         instances.kube-system.cilium = {
-          package = packages.cilium;
+          package = packages.experimental.cilium;
         };
 
         # region:networkPolicyInstances

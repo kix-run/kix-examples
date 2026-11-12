@@ -15,13 +15,13 @@ kix.buildCluster {
     {
       # region:stackgresOperatorInstance
       instances.stackgres-system.stackgres-operator = {
-        package = packages.stackgres-operator;
+        package = packages.experimental.stackgres-operator;
       };
       # endregion:stackgresOperatorInstance
 
       # region:stackgresClusterInstance
       instances.database.postgres = {
-        package = packages.stackgres-cluster;
+        package = packages.experimental.stackgres-cluster;
         config = {
           instances = 1;
           postgres.version = "17";
