@@ -66,8 +66,15 @@ kix.buildCluster {
           # The password comes from a SOPS file encrypted to the test-only key.
           vaultwarden-db = {
             package = packages.experimental.stackgres-database;
-            config.passwordSource = ./secrets/dev-vaultwarden-db.sops.yaml;
-            config.passwordHash = "sha256-6z8/KT0AyFm5bcHSAUTHDPtaVgTnuIfnTOC9r6MFxng=";
+          };
+          vaultwarden-db-password = {
+            package = packages.secret;
+            aliases = [ "password" ];
+            config = {
+              source = ./secrets/dev-vaultwarden-db.sops.yaml;
+              hash = "sha256-6z8/KT0AyFm5bcHSAUTHDPtaVgTnuIfnTOC9r6MFxng=";
+              keys = [ "password" ];
+            };
           };
           storage = {
             package = packages."persistent-volume-claim";
@@ -101,8 +108,15 @@ kix.buildCluster {
           # The password comes from a SOPS file encrypted to the test-only key.
           vaultwarden-db = {
             package = packages.experimental.stackgres-database;
-            config.passwordSource = ./secrets/staging-vaultwarden-db.sops.yaml;
-            config.passwordHash = "sha256-S/koUrFO5P3Yx4kHCQ0jQrSCnf7KxVEN2nfQnAbCX/o=";
+          };
+          vaultwarden-db-password = {
+            package = packages.secret;
+            aliases = [ "password" ];
+            config = {
+              source = ./secrets/staging-vaultwarden-db.sops.yaml;
+              hash = "sha256-S/koUrFO5P3Yx4kHCQ0jQrSCnf7KxVEN2nfQnAbCX/o=";
+              keys = [ "password" ];
+            };
           };
           storage = {
             package = packages."persistent-volume-claim";
