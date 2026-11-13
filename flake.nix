@@ -5,17 +5,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    # Fetched via the GitHub fetcher. While kix-run/kix is private, every
-    # consumer (local dev, Kix CI, the captures pipeline) must
-    # provide a token: `gh auth token` plugged into nix.conf
-    # `access-tokens = github.com=...`, or the workflow's auto-issued
-    # GITHUB_TOKEN. The Kix captures pipeline rewrites this URL
-    # to `path:<store>` and drops flake.lock before invoking kix, so
-    # its sandboxed eval never hits the network. (kix's clap CLI
-    # doesn't forward `--override-input`, so the rewrite is the only
-    # in-band knob.)
-    kixpkgs.url = "github:kix-run/kix";
-    kixpkgs.inputs.nixpkgs.follows = "nixpkgs";
+    # The Kix library. Kix reads the tag below from flake.lock and runs
+    # exactly that version of Kix, so `kix upgrade --to <version>` is how
+    # this moves. While kix-run/kix is private, fetching it needs a GitHub
+    # token in nix.conf (`access-tokens = github.com=...`). The Kix docs
+    # captures override this input with the Kix checkout they build.
+    kix.url = "github:kix-run/kix/v0.10.0-rc.3";
+    kix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   # Each example folder has its own cluster.nix. Add a new example by
@@ -23,7 +19,7 @@
   # region:mkFlakeOutputs
   outputs =
     inputs:
-    inputs.kixpkgs.lib.mkFlake {
+    inputs.kix.lib.mkFlake {
       inherit inputs;
       clusters = {
         "02-hello-world" = ./tutorials/02-hello-world/cluster.nix;
