@@ -10,7 +10,7 @@
     # this moves. While kix-run/kix is private, fetching it needs a GitHub
     # token in nix.conf (`access-tokens = github.com=...`). The Kix docs
     # captures override this input with the Kix checkout they build.
-    kix.url = "github:kix-run/kix/v0.10.0-rc.3";
+    kix.url = "github:kix-run/kix/v0.10.0-rc.4";
     kix.inputs.nixpkgs.follows = "nixpkgs";
   };
 

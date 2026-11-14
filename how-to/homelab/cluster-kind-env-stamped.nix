@@ -82,7 +82,6 @@ kix.buildCluster {
             aliases = [ "password" ];
             config = {
               source = ./secrets/dev-vaultwarden-db.sops.yaml;
-              hash = "sha256-6z8/KT0AyFm5bcHSAUTHDPtaVgTnuIfnTOC9r6MFxng=";
               keys = [ "password" ];
             };
           };
@@ -125,7 +124,6 @@ kix.buildCluster {
             aliases = [ "password" ];
             config = {
               source = ./secrets/staging-vaultwarden-db.sops.yaml;
-              hash = "sha256-S/koUrFO5P3Yx4kHCQ0jQrSCnf7KxVEN2nfQnAbCX/o=";
               keys = [ "password" ];
             };
           };
