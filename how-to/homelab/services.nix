@@ -81,7 +81,6 @@ in
         aliases = [ "password" ];
         config = {
           source = ./secrets/immich-db.sops.yaml;
-          hash = "sha256-vwbLaeeessNjQjxi7gXuctFP+UjgTrRHzy8XO/cXeTc=";
           keys = [ "password" ];
         };
       };
@@ -156,7 +155,6 @@ in
         aliases = [ "password" ];
         config = {
           source = ./secrets/vaultwarden-db.sops.yaml;
-          hash = "sha256-vSRCg4c2Q8jZrB+qWUa7YhXrpdZOoafVsi2KtKkZPRQ=";
           keys = [ "password" ];
         };
       };
