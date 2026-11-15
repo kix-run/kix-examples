@@ -4,9 +4,7 @@
 # history.
 #
 # Flow:
-#   Phase 0  cluster bootstrap (kind + Gateway API CRDs + envoy-gateway
-#            helm controller, installed up-front so ingress-nginx and
-#            gateway phases don't race on CRD install)
+#   Phase 0  cluster bootstrap (kind)
 #   Phase 1  kix deploy homelab-kind                 → ingress-nginx serving
 #   Phase 2  kix deploy homelab-kind-gateway-migrate → migration lands
 #            (shared activation identity "homelab-kind" — this is the
@@ -40,12 +38,6 @@ KEEP=false
 RECREATE=false
 PRELOAD=true
 
-GATEWAY_API_VERSION="v1.2.1"
-GATEWAY_API_URL="https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/standard-install.yaml"
-
-EG_NS="envoy-gateway-system"
-EG_CHART_VERSION="v1.3.0"
-EG_CHART_URL="oci://docker.io/envoyproxy/gateway-helm"
 
 for arg in "$@"; do
     case "$arg" in
@@ -83,7 +75,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-for cmd in kind kubectl kix cilium helm; do
+for cmd in kind kubectl kix cilium; do
     command -v "$cmd" >/dev/null || die "missing dependency: $cmd"
 done
 
@@ -120,19 +112,6 @@ if ! kind get clusters 2>/dev/null | grep -qx "$CLUSTER_NAME"; then
     kind create cluster --name "$CLUSTER_NAME" --config "$KIND_CONFIG"
 fi
 kubectl cluster-info --context "$KCTX" >/dev/null || die "kubectl context '$KCTX' not reachable"
-
-log "installing Gateway API CRDs"
-kubectl --context "$KCTX" apply -f "$GATEWAY_API_URL" \
-    || die "failed to install Gateway API CRDs"
-
-log "installing envoy-gateway controller"
-kubectl --context "$KCTX" create ns "$EG_NS" --dry-run=client -o yaml \
-    | kubectl --context "$KCTX" apply -f - >/dev/null
-helm --kube-context "$KCTX" upgrade --install envoy-gateway "$EG_CHART_URL" \
-    --version "$EG_CHART_VERSION" \
-    --namespace "$EG_NS" \
-    --wait --timeout 5m \
-    || warn "envoy-gateway helm install reported issues (continuing)"
 
 if [ "$PRELOAD" = true ]; then
     log "preloading images (homelab-kind ∪ homelab-kind-gateway-migrate)"

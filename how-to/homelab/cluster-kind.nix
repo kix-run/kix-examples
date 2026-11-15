@@ -5,7 +5,8 @@
 # ingress-nginx), so `kix check homelab-kind` catches most regressions.
 #
 #   - kind flavor (ephemeral storage, no LoadBalancer)
-#   - ingress-nginx instead of envoy-gateway (kind has no Gateway API CRDs)
+#   - ingress-nginx for routing (cluster-kind-gateway.nix routes through
+#     envoy-gateway instead)
 
 { kix, packages }:
 
@@ -48,7 +49,7 @@ kix.buildCluster {
 
         # Legacy Ingress L7. ingress-nginx provides the `ingressNginx` DI
         # alias that kix.expose consumes to emit Ingress resources instead
-        # of HTTPRoutes (kind doesn't ship Gateway API CRDs).
+        # of HTTPRoutes.
         instances.ingress-nginx.ingress-nginx = {
           package = packages.experimental."ingress-nginx";
         };

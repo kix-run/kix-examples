@@ -22,10 +22,6 @@
 # Flow:
 #   Phase 0 — cluster bootstrap
 #     1. Create kind cluster with default CNI disabled
-#     2. Install Gateway API CRDs up-front (harmless while idle —
-#        nothing references them yet in phase 1)
-#     3. Install envoy-gateway controller via helm up-front (same —
-#        idles until a GatewayClass with its controller name exists)
 #
 #   Phase 1 — ingress world
 #     4. kix deploy homelab-kind
@@ -61,12 +57,9 @@ RECREATE=false
 PRELOAD=true
 PAUSE_SECONDS=10
 
-GATEWAY_API_VERSION="v1.2.1"
-GATEWAY_API_URL="https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/standard-install.yaml"
-
-EG_NS="envoy-gateway-system"
-EG_CHART_VERSION="v1.3.0"
-EG_CHART_URL="oci://docker.io/envoyproxy/gateway-helm"
+# The envoy-gateway instance's namespace, where the controller runs the
+# Envoy proxies.
+EG_NS="gateway-system"
 
 IMMICH_NS="immich"
 IMMICH_SVC="immich-server"
@@ -124,7 +117,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 # ── prerequisites ────────────────────────────────────────────────────────
-for cmd in kind kubectl kix cilium helm; do
+for cmd in kind kubectl kix cilium; do
     command -v "$cmd" >/dev/null || die "missing dependency: $cmd"
 done
 
@@ -167,27 +160,6 @@ if ! kind get clusters 2>/dev/null | grep -qx "$CLUSTER_NAME"; then
     kind create cluster --name "$CLUSTER_NAME" --config "$KIND_CONFIG"
 fi
 kubectl cluster-info --context "$KCTX" >/dev/null || die "kubectl context '$KCTX' not reachable"
-step_done
-
-# Install Gateway API CRDs + envoy-gateway controller up front. Idle in
-# phase 1 (nothing references them yet), active once phase 2 creates
-# GatewayClass/Gateway/HTTPRoutes. Doing this up front avoids a
-# mid-migration CRD install racing with the lifecycle engine.
-step_start
-log "installing Gateway API CRDs ($GATEWAY_API_VERSION, standard channel)"
-kubectl --context "$KCTX" apply -f "$GATEWAY_API_URL" \
-    || die "failed to install Gateway API CRDs"
-step_done
-
-step_start
-log "installing envoy-gateway controller ($EG_CHART_VERSION) via helm (idle until phase 2)"
-kubectl --context "$KCTX" create ns "$EG_NS" --dry-run=client -o yaml \
-    | kubectl --context "$KCTX" apply -f - >/dev/null
-helm --kube-context "$KCTX" upgrade --install envoy-gateway "$EG_CHART_URL" \
-    --version "$EG_CHART_VERSION" \
-    --namespace "$EG_NS" \
-    --wait --timeout 5m \
-    || warn "envoy-gateway helm install reported issues (continuing)"
 step_done
 
 # ── preload images (both activations' union) ─────────────────────────────
