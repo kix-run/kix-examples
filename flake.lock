@@ -92,16 +92,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1794616677,
-        "narHash": "sha256-2D1Fv8Bvik0UDY7bgiV64pP/Zep20zbsAJIrMuK2YhQ=",
+        "lastModified": 1794758876,
+        "narHash": "sha256-1QD0RK23ise/X94pJLz+EVsCSfIPaX+61bnwiIk4vHI=",
         "owner": "kix-run",
         "repo": "kix",
-        "rev": "3658ce73c4cdc35b1418dc4692c2c9b00ba9db3c",
+        "rev": "d5ce325e854d3c67e54ca0e0f8f24980a3683c71",
         "type": "github"
       },
       "original": {
         "owner": "kix-run",
-        "ref": "v0.10.0-rc.4",
+        "ref": "main",
         "repo": "kix",
         "type": "github"
       }
