@@ -7,17 +7,16 @@
 #
 # Flow:
 #   1. Create kind cluster with default CNI disabled (so cilium owns it)
-#   2. Install Gateway API CRDs (upstream kubernetes-sigs, standard channel)
-#   3. Install envoy-gateway controller via helm (owns Gateway API reconcile)
-#   4. kix deploy homelab-kind-gateway  (installs cilium, GatewayClass, Gateway,
+#   2. kix deploy homelab-kind-gateway  (installs cilium, the Gateway API
+#      CRDs, the Envoy Gateway controller, GatewayClass, Gateway,
 #      HTTPRoutes, and every app workload)
-#   5. Wait for cilium + envoy-gateway + workloads
-#   6. Port-forward:
+#   3. Wait for cilium + workloads
+#   4. Port-forward:
 #        - the envoy data plane service → localhost:8088  (HTTPRoute surface)
 #        - immich / vaultwarden directly → localhost:2283 / 8088 (bypass,
 #          browser-friendly)
 #        - grafana → localhost:3000
-#   7. Narrate the capability flip: `kubectl get httproute -A` versus the
+#   5. Narrate the capability flip: `kubectl get httproute -A` versus the
 #      zero ingresses that exist on this variant.
 #
 # Usage: ./how-to/homelab/demos/deploy-homelab-kind-gateway.sh [--keep] [--recreate] [--connectivity] [--no-preload]
@@ -39,15 +38,10 @@ RECREATE=false
 CONNECTIVITY=false
 PRELOAD=true
 
-# Upstream Gateway API standard channel. Matches envoy-gateway's
-# supported floor in its docs (v1.2.x works with envoy-gateway 1.3+).
-GATEWAY_API_VERSION="v1.2.1"
-GATEWAY_API_URL="https://github.com/kubernetes-sigs/gateway-api/releases/download/${GATEWAY_API_VERSION}/standard-install.yaml"
 
-# envoy-gateway controller helm chart. Installed into envoy-gateway-system.
-EG_NS="envoy-gateway-system"
-EG_CHART_VERSION="v1.3.0"
-EG_CHART_URL="oci://docker.io/envoyproxy/gateway-helm"
+# The envoy-gateway instance's namespace, where the controller runs the
+# Envoy proxies.
+EG_NS="gateway-system"
 
 IMMICH_NS="immich"
 IMMICH_SVC="immich-server"
@@ -107,7 +101,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 # ── prerequisites ────────────────────────────────────────────────────────
-for cmd in kind kubectl kix cilium helm; do
+for cmd in kind kubectl kix cilium; do
     command -v "$cmd" >/dev/null || die "missing dependency: $cmd"
 done
 
@@ -211,31 +205,6 @@ if [ "$PRELOAD" = true ]; then
     fi
 fi
 
-# ── Gateway API CRDs ────────────────────────────────────────────────────
-# kix's envoy-gateway package only emits GatewayClass/Gateway resources;
-# the CRDs they reference have to exist first. Apply the upstream
-# standard channel (matches envoy-gateway controller requirements).
-step_start
-log "installing Gateway API CRDs ($GATEWAY_API_VERSION, standard channel)"
-kubectl --context "$KCTX" apply -f "$GATEWAY_API_URL" \
-    || die "failed to install Gateway API CRDs"
-step_done
-
-# ── envoy-gateway controller ────────────────────────────────────────────
-# The kix package declares GatewayClass + Gateway but not the controller.
-# Install it via upstream helm chart into envoy-gateway-system. Must
-# happen *before* kix deploy so GatewayClass/Gateway reconcile cleanly.
-step_start
-log "installing envoy-gateway controller ($EG_CHART_VERSION) via helm"
-kubectl --context "$KCTX" create ns "$EG_NS" --dry-run=client -o yaml \
-    | kubectl --context "$KCTX" apply -f - >/dev/null
-helm --kube-context "$KCTX" upgrade --install envoy-gateway "$EG_CHART_URL" \
-    --version "$EG_CHART_VERSION" \
-    --namespace "$EG_NS" \
-    --wait --timeout 5m \
-    || warn "envoy-gateway helm install reported issues (continuing)"
-step_done
-
 # ── deploy with kix ──────────────────────────────────────────────────────
 step_start
 log "deploying homelab-kind-gateway via kix (flake .)"
@@ -289,7 +258,7 @@ echo
 
 # ── port-forwards ────────────────────────────────────────────────────────
 # The envoy data plane service is named by envoy-gateway as
-# `envoy-<namespace>-<gateway-name>-<hash>` in envoy-gateway-system.
+# `envoy-<namespace>-<gateway-name>-<hash>` in the controller's namespace.
 # Look it up by label instead of name so the hash drift is harmless.
 log "looking up envoy data plane service"
 ENVOY_SVC="$(kubectl --context "$KCTX" -n "$EG_NS" get svc \
