@@ -20,7 +20,7 @@ kix.buildCluster {
       # region:clusterAndNamespaceSettings
       clusterDomain = "cluster.example";
       clusterLabels."platform.example.com/environment" = "development";
-      k8sVersion = "1.31";
+      k8sVersion = "1.36";
 
       namespaces.apps = {
         labels."platform.example.com/tier" = "application";
