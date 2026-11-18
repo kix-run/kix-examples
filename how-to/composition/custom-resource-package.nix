@@ -41,14 +41,13 @@
       machineCrd = scope.mkCRD (
         scope.crd.fromKind "Machine" { spec.group = "machines.example.com"; }
         // {
+          # region:customResourceGenerationField
           readiness = {
             path = "/status/printableStatus";
             equals = "Running";
-            # region:customResourceGenerationField
             # The field where the controller reports the generation it has
             # acted on. Kix waits until it reaches metadata.generation.
             observedGeneration = "/status/desiredGeneration";
-            # endregion:customResourceGenerationField
             # region:customResourcePendingRestart
             # The controller accepted the spec, and the running machine keeps
             # the previous one until someone restarts it.
@@ -61,6 +60,7 @@
             };
             # endregion:customResourcePendingRestart
           };
+          # endregion:customResourceGenerationField
         }
       );
 
