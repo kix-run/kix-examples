@@ -33,13 +33,15 @@
         instances.monitoring-system.loki-logs.config.healthCheck.enabled = true;
 
         # ─── Gateway API L7 ──────────────────────────────────────────
-        # envoy-gateway installs the controller and provides the `gateway`
-        # DI alias consumed by kix.expose, so every exposed service emits
-        # an HTTPRoute bound to its Gateway. gateway-api installs the CRDs.
+        # envoy-gateway-controller installs the controller. envoy-gateway
+        # adds a Gateway and provides the `gateway` DI alias consumed by
+        # kix.expose, so every exposed service emits an HTTPRoute bound to
+        # that Gateway. gateway-api installs the CRDs.
         # The kind flavour binds the loadBalancer role absent, so the proxy
         # Service is a NodePort.
         instances.gateway-system = {
           gateway-api.package = packages.experimental.gateway-api;
+          envoy-gateway-controller.package = packages.experimental.envoy-gateway-controller;
           gateway = {
             package = packages.experimental.envoy-gateway;
             config.listeners = [

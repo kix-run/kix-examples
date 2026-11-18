@@ -3,9 +3,10 @@
 # Recommended reading: 06-service-dep (package dependencies).
 #
 # What's new: the gateway dependency makes kix.expose render an HTTPRoute.
-# envoy-gateway installs the Envoy Gateway controller and its Gateway, and
-# gateway-api installs the Gateway API CRDs. The kind flavour has no load
-# balancer, so the proxy Service is a NodePort.
+# gateway-api installs the Gateway API CRDs, envoy-gateway-controller
+# installs the Envoy Gateway controller, and envoy-gateway adds a Gateway on
+# it. The kind flavour has no load balancer, so the proxy Service is a
+# NodePort.
 
 { kix, packages, ... }:
 
@@ -21,6 +22,11 @@ kix.buildCluster {
       # region:gatewayApiInstance
       instances.gateway-system.gateway-api.package = packages.experimental.gateway-api;
       # endregion:gatewayApiInstance
+
+      # region:gatewayControllerInstance
+      instances.gateway-system.envoy-gateway-controller.package =
+        packages.experimental.envoy-gateway-controller;
+      # endregion:gatewayControllerInstance
 
       # region:gatewayInstance
       instances.gateway-system.gateway = {
