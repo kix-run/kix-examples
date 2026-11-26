@@ -8,9 +8,8 @@
     # The Kix library, at Kix's main branch until a release carries the
     # gateway-api package. On a branch Kix runs whatever version started it;
     # at a release tag it runs exactly that version, and
-    # `kix upgrade --to <version>` is how this moves. While kix-run/kix is private, fetching it needs a GitHub
-    # token in nix.conf (`access-tokens = github.com=...`). The Kix docs
-    # captures override this input with the Kix checkout they build.
+    # `kix upgrade --to <version>` is how this moves. The Kix docs captures
+    # override this input with the Kix checkout they build.
     kix.url = "github:kix-run/kix/main";
     kix.inputs.nixpkgs.follows = "nixpkgs";
   };
