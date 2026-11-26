@@ -22,17 +22,6 @@ onto a writable workspace copy of this repo by the docs captures
 pipeline. They are deliberately not in this repo so the public
 `kix list clusters` doesn't reveal them.
 
-> [!NOTE]
-> `kix-run/kix` is private until it is published. `flake.nix` fetches it
-> with the GitHub fetcher, so any consumer must provide a token. Locally, plug
-> `gh auth token` into `~/.config/nix/nix.conf`:
->
-> ```
-> access-tokens = github.com=ghp_…
-> ```
->
-> CI in `kix-run/kix` uses its auto-issued `GITHUB_TOKEN`.
-
 ## Prerequisites
 
 - **[Nix](https://nixos.org/download)** with flakes enabled
