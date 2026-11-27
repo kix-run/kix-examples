@@ -177,3 +177,7 @@ how-to/
 other/
   README.md                 # placeholder for non-tutorial examples
 ```
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE).
